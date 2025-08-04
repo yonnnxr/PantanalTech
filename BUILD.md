@@ -62,7 +62,7 @@ npm run reinstall:bun
 ### Otimizações Aplicadas
 - **Code Splitting**: Separação automática de chunks
 - **Tree Shaking**: Remoção de código não utilizado
-- **Minificação**: Terser para otimização de código
+- **Minificação**: Terser para otimização de código (dependência incluída)
 - **Chunk Optimization**: Separação de vendor, leaflet e router
 
 ### Estrutura de Saída
@@ -155,6 +155,14 @@ npm run serve
 ```
 
 ## Troubleshooting
+
+### Erro do Terser
+```bash
+# Se aparecer erro "terser not found", instale:
+npm install --save-dev terser
+# ou
+bun add -d terser
+```
 
 ### Erro de memória no build
 ```bash
