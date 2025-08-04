@@ -1,0 +1,8 @@
+name = "rota-serra-paxixi"
+compatibility_date = "2025-08-04"
+
+[site]
+bucket = "./dist"
+
+[build]
+command = "bun run build" 

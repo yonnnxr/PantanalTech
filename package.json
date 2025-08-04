@@ -2,10 +2,21 @@
   "name": "rota-serra-paxixi",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "build:dev": "vite build --mode development",
+    "build:prod": "vite build --mode production",
+    "build:analyze": "vite build --mode production --analyze",
+    "preview": "vite preview",
+    "preview:build": "vite preview --port 4173",
+    "start": "vite preview --port 3000",
+    "serve": "vite preview --port 4173 --host",
+    "clean": "rm -rf dist node_modules/.vite",
+    "clean:all": "rm -rf dist node_modules/.vite node_modules package-lock.json bun.lockb",
+    "reinstall": "npm run clean:all && npm install",
+    "reinstall:bun": "bun run clean:all && bun install"
   },
   "dependencies": {
     "react": "^18.2.0",

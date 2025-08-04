@@ -1,0 +1,9 @@
+{
+  "build": {
+    "command": "bun run build",
+    "output": "dist"
+  },
+  "deploy": {
+    "command": null
+  }
+} 
