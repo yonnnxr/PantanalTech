@@ -1,8 +1,6 @@
 name = "rota-serra-paxixi"
 compatibility_date = "2025-08-04"
+main = "src/worker.js"
 
 [site]
-bucket = "./dist"
-
-[build]
-command = "bun run build" 
+bucket = "./dist" 

@@ -77,6 +77,13 @@ dist/
 └── index.html
 ```
 
+### ✅ Build Status
+- **Build Time:** ~25 segundos
+- **Code Splitting:** Funcionando (vendor, leaflet, router separados)
+- **Minificação:** Terser funcionando
+- **Gzip:** Otimizado automaticamente
+- **Assets:** 5.5MB total (4.4MB imagem do Pantanal)
+
 ## Variáveis de Ambiente
 
 Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
@@ -95,9 +102,10 @@ O projeto está configurado para deploy no Cloudflare Pages.
 **Comando de build:** `bun run build`
 
 **Configuração:**
-- Arquivo `wrangler.toml` configurado para deploy
+- Arquivo `wrangler.toml` configurado para deploy com Worker
+- Worker script `src/worker.js` para servir arquivos estáticos
 - Arquivo `public/_headers` para cache e segurança
-- Arquivo `public/_redirects` para SPA routing
+- SPA routing configurado no Worker
 - Build otimizado para produção
 
 **Deploy via Web Interface:**
@@ -113,7 +121,9 @@ O projeto está configurado para deploy no Cloudflare Pages.
    - **Deploy command:** (deixe vazio - não configure)
 5. Clique em "Save and Deploy"
 
-**IMPORTANTE:** Você precisa remover o comando de deploy personalizado na interface web do Cloudflare Pages.
+**✅ BUILD FUNCIONANDO:** O build está funcionando perfeitamente!
+
+**✅ WORKER CONFIGURADO:** Criado Worker script para servir arquivos estáticos com SPA routing.
 
 **Deploy via CLI (opcional):**
 ```bash
