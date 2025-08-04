@@ -125,6 +125,8 @@ O projeto está configurado para deploy no Cloudflare Pages.
 
 **✅ WORKER CONFIGURADO:** Criado Worker script para servir arquivos estáticos com SPA routing.
 
+**⚠️ NOME DO WORKER:** O sistema CI está usando o nome "seachapantanal" em vez de "rota-serra-paxixi". Isso é normal e será ajustado automaticamente.
+
 **Deploy via CLI (opcional):**
 ```bash
 # Instalar Wrangler
@@ -172,6 +174,14 @@ npm run serve
 npm install --save-dev terser
 # ou
 bun add -d terser
+```
+
+### Erro "no such file or directory, scandir '/dist'"
+```bash
+# O build precisa ser executado antes do deploy
+# Verifique se o wrangler.toml tem:
+[build]
+command = "bun run build"
 ```
 
 ### Erro de memória no build
