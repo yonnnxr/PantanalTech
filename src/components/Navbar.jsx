@@ -31,9 +31,9 @@ export default function Navbar({
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-[10000] ${variants[variant]} ${className}`} style={{ zIndex: 10000 }}>
-      <div className="max-w-7xl mx-auto flex items-center px-4 py-2">
+      <div className="max-w-7xl mx-auto flex items-center px-6 py-3">
         {/* Logo à esquerda */}
-        <div className="flex items-center">
+        <div className="flex-shrink-0">
           {showLogo && (
             <Logo 
               size="xxlarge" 
@@ -44,7 +44,7 @@ export default function Navbar({
         </div>
         
         {/* Itens centralizados */}
-        <div className="flex-1 flex items-center justify-center gap-4">
+        <div className="flex-1 flex items-center justify-center gap-8">
           {showBackButton && (
             <button
               onClick={onBackClick}
@@ -64,7 +64,7 @@ export default function Navbar({
         </div>
         
         {/* Botões à direita */}
-        <div className="flex items-center gap-1">
+        <div className="flex-shrink-0 flex items-center gap-1">
           {showThemeToggle && <ThemeToggle />}
           {showLanguageToggle && <LanguageToggle textColor={textColors[variant]} />}
         </div>

@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { MS_IMAGES } from '../data/images';
+import { GALLERY_IMAGES } from '../data/images';
 import ImageGallery from '../components/ImageGallery';
 import { PageLayout, HeroSection, ContentSection, PageFooter } from '../components/PageLayout';
 
@@ -117,9 +117,9 @@ export default function Gallery() {
   // Memoização das imagens filtradas
   const filteredImages = useMemo(() => {
     if (activeCategory === 'all') {
-      return Object.values(MS_IMAGES.gallery).flat();
-    }
-    return MS_IMAGES.gallery[activeCategory] || [];
+          return Object.values(GALLERY_IMAGES).flat();
+  }
+  return GALLERY_IMAGES[activeCategory] || [];
   }, [activeCategory]);
 
   // Memoização das contagens de imagens por categoria
@@ -127,9 +127,9 @@ export default function Gallery() {
     const counts = {};
     categories.forEach(category => {
       if (category.id === 'all') {
-        counts[category.id] = t(`${Object.values(MS_IMAGES.gallery).flat().length} imagens encontradas`, `${Object.values(MS_IMAGES.gallery).flat().length} images found`);
-      } else {
-        counts[category.id] = t(`${MS_IMAGES.gallery[category.id]?.length || 0} imagens`, `${MS_IMAGES.gallery[category.id]?.length || 0} images`);
+              counts[category.id] = t(`${Object.values(GALLERY_IMAGES).flat().length} imagens encontradas`, `${Object.values(GALLERY_IMAGES).flat().length} images found`);
+    } else {
+      counts[category.id] = t(`${GALLERY_IMAGES[category.id]?.length || 0} imagens`, `${GALLERY_IMAGES[category.id]?.length || 0} images`);
       }
     });
     return counts;

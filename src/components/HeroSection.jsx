@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { Link } from 'react-router-dom';
-import Navbar from './Navbar';
 
 export default function HeroSection({ 
   heroImage, 
@@ -28,7 +27,7 @@ export default function HeroSection({
   }, [heroImage]);
 
   return (
-    <header className="hero-section relative text-white overflow-hidden h-screen flex flex-col justify-center">
+    <header className="hero-section relative text-white overflow-hidden flex flex-col justify-center" style={{ height: 'calc(100vh - 80px)' }}>
       {/* Background com Parallax */}
       <div
         className={`hero-background absolute inset-0 transition-opacity duration-1000 ${
@@ -56,8 +55,6 @@ export default function HeroSection({
       
       {/* Overlay gradiente */}
       <div className="hero-overlay absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
-      
-      <Navbar variant="transparent" className="z-[9999]" />
 
       {/* Conteúdo Hero */}
       <div className="hero-content relative container mx-auto px-6 h-full flex items-center">

@@ -8,12 +8,13 @@ import DestinationCard from '../components/DestinationCard';
 import DestinationModal from '../components/DestinationModal';
 import RouteBuilder from '../components/RouteBuilder';
 import heroImage from '../assets/images/paxixi_thumb.jpg';
-import { getRandomHeroImage, MS_IMAGES } from '../data/images';
+import { getRandomHeroImage, GALLERY_IMAGES } from '../data/images';
 import AccessibilityPanel from '../components/AccessibilityPanel';
 import AutoRouteGenerator from '../components/AutoRouteGenerator';
 import ImageGallery from '../components/ImageGallery';
 import HeroSection from '../components/HeroSection';
 import AppFooter from '../components/AppFooter';
+import Navbar from '../components/Navbar';
 
 export default function Home() {
   const [filteredDestinations, setFilteredDestinations] = useState(DESTINATIONS);
@@ -60,6 +61,9 @@ export default function Home() {
 
     return (
     <div className="min-h-screen flex flex-col bg-gray-50">
+      {/* Navbar */}
+      <Navbar />
+      
       {/* Hero Section */}
       <HeroSection 
         heroImage={heroImage}
@@ -384,7 +388,7 @@ export default function Home() {
             {/* Pantanal */}
             <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
               <img 
-                src={MS_IMAGES.gallery.pantanal[0]} 
+                src={GALLERY_IMAGES.pantanal[0]} 
                 alt="Pantanal" 
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
               />
@@ -398,7 +402,7 @@ export default function Home() {
             {/* Serra */}
             <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
               <img 
-                src={MS_IMAGES.gallery.serra[0]} 
+                src={GALLERY_IMAGES.serra[0]} 
                 alt="Serra" 
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
               />
@@ -412,7 +416,7 @@ export default function Home() {
             {/* Fauna */}
             <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
               <img 
-                src={MS_IMAGES.gallery.fauna[0]} 
+                src={GALLERY_IMAGES.fauna[0]} 
                 alt="Fauna" 
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
               />
@@ -426,7 +430,7 @@ export default function Home() {
             {/* Flora */}
             <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
               <img 
-                src={MS_IMAGES.gallery.flora[0]} 
+                src={GALLERY_IMAGES.flora[0]} 
                 alt="Flora" 
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
               />
@@ -440,7 +444,7 @@ export default function Home() {
 
           {/* Galeria Completa */}
           <ImageGallery 
-            images={Object.values(MS_IMAGES.gallery).flat().slice(0, 12)}
+            images={Object.values(GALLERY_IMAGES).flat().slice(0, 12)}
             title={t('Galeria Completa', 'Complete Gallery')}
             subtitle={t('Clique nas imagens para ampliar', 'Click on images to enlarge')}
             category="MS"
