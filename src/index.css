@@ -55,6 +55,7 @@ nav .flex-1 {
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
 }
 
 /* Garantir que a logo não seja afetada pelo layout flex */
