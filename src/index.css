@@ -32,6 +32,7 @@ body {
 nav {
   min-height: 80px;
   max-height: 80px;
+  height: 80px;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   position: fixed !important;
@@ -41,6 +42,8 @@ nav {
   z-index: 10000 !important;
   background: rgba(255, 255, 255, 0.95) !important;
   backdrop-filter: blur(10px) !important;
+  display: flex;
+  align-items: center;
 }
 
 /* Garantir que a navbar sempre fique visível */
@@ -61,11 +64,17 @@ nav .flex-1 {
 /* Garantir que a logo não seja afetada pelo layout flex */
 nav .flex-shrink-0:first-child {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 /* Garantir que os botões da direita não sejam afetados */
 nav .flex-shrink-0:last-child {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 /* Melhorar o alinhamento dos itens centralizados */
@@ -78,6 +87,11 @@ nav .flex-1.flex.items-center.justify-center {
 nav .max-w-7xl {
   padding-left: 1rem;
   padding-right: 1rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 70rem;
 }
 
 /* Ajustar espaçamento do conteúdo principal */
@@ -286,6 +300,15 @@ body:not(.modal-open) {
   min-height: auto !important;
   max-width: none !important;
   max-height: none !important;
+  align-self: center !important;
+}
+
+/* Garantir que o container do logo esteja centralizado verticalmente */
+.logo-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 100% !important;
 }
 
 
