@@ -1,206 +1,215 @@
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
-import RouteVisualization from './RouteVisualization';
-import DestinationModal from './DestinationModal';
-import { useState, useEffect } from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
+import { useEffect, useRef, useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
+import DestinationModal from './DestinationModal';
+import MapControls from './MapControls';
+import MapLoading from './MapLoading';
+import { Z_INDEX } from '../utils/zIndex';
 
-// Corrige caminho dos ícones padrão do Leaflet
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
-});
+export default function InteractiveMap({ 
+  destinations, 
+  userPos, 
+  selectedDest, 
+  onMarkerClick, 
+  routeData,
+  className = "h-96 w-full"
+}) {
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markersRef = useRef([]);
+  const routeLayerRef = useRef(null);
+  const [selectedDestination, setSelectedDestination] = useState(null);
+  const [isMapLoading, setIsMapLoading] = useState(true);
+  const { language, t } = useLanguage();
 
-// Ícones personalizados para diferentes categorias
-const createCustomIcon = (iconClass, color = '#3B82F6') => {
-  return L.divIcon({
-    html: `<div style="
-      background-color: ${color};
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: white;
-      border: 3px solid white;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    "><i class='${iconClass}'></i></div>`,
-    className: 'custom-marker',
-    iconSize: [40, 40],
-    iconAnchor: [20, 20],
-  });
-};
+  useEffect(() => {
+    // Verificar se o Leaflet já foi carregado
+    if (window.L) {
+      initMap();
+      return;
+    }
 
-// Componente para centralizar o mapa na posição do usuário
-function CenterMapButton({ userPos }) {
-  const map = useMap();
-  const { t } = useLanguage();
+    // Carregar Leaflet CSS dinamicamente
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+    link.crossOrigin = '';
+    document.head.appendChild(link);
 
-  const centerOnUser = () => {
-    if (userPos) {
-      map.flyTo(userPos, 13, { duration: 1.5 });
+    // Carregar Leaflet JS dinamicamente
+    const script = document.createElement('script');
+    script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+    script.crossOrigin = '';
+    script.onload = initMap;
+    script.onerror = () => {
+      console.error('Erro ao carregar Leaflet');
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      // Cleanup
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+      }
+    };
+  }, []);
+
+  const initMap = () => {
+    if (!mapRef.current || mapInstanceRef.current) return;
+
+    try {
+      // Inicializar mapa
+      const map = L.map(mapRef.current).setView([-20.4701, -55.7864], 10);
+      mapInstanceRef.current = map;
+
+      // Adicionar tile layer
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      // Adicionar marcadores
+      addMarkers();
+      
+      setIsMapLoading(false);
+    } catch (error) {
+      console.error('Erro ao inicializar mapa:', error);
+      setIsMapLoading(false);
     }
   };
 
-  if (!userPos) return null;
+  const addMarkers = () => {
+    if (!mapInstanceRef.current) return;
 
-  return (
-    <div className="leaflet-top leaflet-right">
-      <div className="leaflet-control leaflet-bar">
-        <button
-          onClick={centerOnUser}
-          className="bg-white hover:bg-gray-50 p-2 text-gray-700 border-none cursor-pointer"
-          title={t('Centralizar na minha localização', 'Center on my location')}
-          aria-label={t('Centralizar na minha localização', 'Center on my location')}
-        >
-          <i class='fa-solid fa-crosshairs'></i>
-        </button>
-      </div>
-    </div>
-  );
-}
+    // Limpar marcadores existentes
+    markersRef.current.forEach(marker => marker.remove());
+    markersRef.current = [];
 
-export default function InteractiveMap({ destinations, onMarkerClick, className = "h-96", routeData }) {
-  const [userPos, setUserPos] = useState(null);
-  const [selectedDestination, setSelectedDestination] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { language, t } = useLanguage();
+    // Adicionar marcador do usuário
+    if (userPos) {
+      const userMarker = L.marker(userPos, {
+        icon: L.divIcon({
+          className: 'user-marker',
+          html: '<div class="w-6 h-6 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>',
+          iconSize: [24, 24],
+          iconAnchor: [12, 12]
+        })
+      }).addTo(mapInstanceRef.current);
+      
+      markersRef.current.push(userMarker);
+    }
 
-  // Geolocalização do usuário
-  useEffect(() => {
-    if (!navigator.geolocation) return;
-    
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        const { latitude, longitude } = pos.coords;
-        setUserPos([latitude, longitude]);
-      },
-      (err) => {
-        console.error('Erro ao obter localização', err);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 300000 // 5 minutos
-      }
-    );
-  }, []);
+    // Adicionar marcadores dos destinos
+    destinations.forEach(dest => {
+      const isSelected = selectedDest && selectedDest.id === dest.id;
+      
+      const marker = L.marker([dest.lat, dest.lon], {
+        icon: L.divIcon({
+          className: 'destination-marker',
+          html: `
+            <div class="w-8 h-8 bg-white rounded-full border-2 border-blue-500 shadow-lg flex items-center justify-center cursor-pointer hover:scale-110 transition-transform ${
+              isSelected ? 'ring-2 ring-yellow-400' : ''
+            }">
+              <i class="fa-solid ${dest.icon.replace('fa-solid ', '')} text-blue-600 text-sm"></i>
+            </div>
+          `,
+          iconSize: [32, 32],
+          iconAnchor: [16, 16]
+        })
+      }).addTo(mapInstanceRef.current);
 
-  const center = userPos ?? [-20.463, -55.789]; // Aquidauana como fallback
+      marker.on('click', () => {
+        console.log('Marcador clicado:', dest.name);
+        setSelectedDestination(dest);
+        onMarkerClick && onMarkerClick(dest);
+        console.log('Modal aberto para:', dest.name);
+      });
 
-  const getCategoryColor = (category) => {
-    const colors = {
-      'Trilhas e ecoturismo': '#10B981', // Verde
-      'Turismo cultural': '#8B5CF6', // Roxo
-      'Gastronomia local': '#F59E0B', // Amarelo
-      'Hospedagens e guias credenciados': '#EF4444', // Vermelho
-    };
-    return colors[category] || '#3B82F6';
+      markersRef.current.push(marker);
+    });
   };
 
+  // Atualizar marcadores quando destinations ou selectedDest mudam
+  useEffect(() => {
+    if (mapInstanceRef.current) {
+      addMarkers();
+    }
+  }, [destinations, selectedDest, userPos]);
+
+  // Fechar modal quando selectedDestination muda
+  useEffect(() => {
+    if (!selectedDestination) {
+      // Modal será fechado automaticamente
+    }
+  }, [selectedDestination]);
+
+  const updateRoute = () => {
+    if (!mapInstanceRef.current || !routeData) return;
+
+    // Remover rota anterior
+    if (routeLayerRef.current) {
+      mapInstanceRef.current.removeLayer(routeLayerRef.current);
+    }
+
+    // Adicionar nova rota
+    const routeLayer = L.geoJSON(routeData.geometry, {
+      style: {
+        color: '#3B82F6',
+        weight: 4,
+        opacity: 0.8
+      }
+    }).addTo(mapInstanceRef.current);
+
+    routeLayerRef.current = routeLayer;
+
+    // Ajustar view para mostrar toda a rota
+    if (routeData.geometry.coordinates.length > 0) {
+      const bounds = L.latLngBounds(routeData.geometry.coordinates.map(coord => [coord[1], coord[0]]));
+      mapInstanceRef.current.fitBounds(bounds, { padding: [20, 20] });
+    }
+  };
+
+  // Atualizar marcadores quando destinos mudam
+  useEffect(() => {
+    if (mapInstanceRef.current) {
+      addMarkers();
+    }
+  }, [destinations, selectedDest, userPos]);
+
+  // Atualizar rota quando routeData muda
+  useEffect(() => {
+    if (mapInstanceRef.current) {
+      updateRoute();
+    }
+  }, [routeData]);
+
   return (
-    <div className={`${className} relative z-10`}>
-      <MapContainer
-        center={center}
-        zoom={userPos ? 13 : 10}
-        className="h-full w-full rounded-lg shadow-lg z-0"
-        zoomControl={true}
+    <>
+      <div 
+        className={`${className} relative`}
+        style={{ zIndex: Z_INDEX.CONTENT }}
+        ref={mapRef}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        {/* Loading overlay */}
+        <MapLoading isMapLoading={isMapLoading} />
+
+        {/* Controles do mapa */}
+        <MapControls 
+          onZoomIn={() => mapInstanceRef.current?.zoomIn()}
+          onZoomOut={() => mapInstanceRef.current?.zoomOut()}
+          routeData={routeData}
         />
-
-        <CenterMapButton userPos={userPos} />
-
-        {/* Marcador da posição do usuário */}
-        {userPos && (
-          <Marker 
-            position={userPos}
-            icon={createCustomIcon('fa-solid fa-location-dot', '#EF4444')}
-          >
-            <Popup>
-              <div className="text-center">
-                <strong>{t('Você está aqui', 'You are here')}</strong>
-              </div>
-            </Popup>
-          </Marker>
-        )}
-
-        {/* Marcadores dos destinos */}
-        {destinations.map((dest) => (
-          <Marker
-            key={dest.id}
-            position={[dest.lat, dest.lon]}
-            icon={createCustomIcon(dest.icon, getCategoryColor(language === 'pt' ? dest.category : dest.categoryEn))}
-            eventHandlers={{
-              click: () => {
-                setSelectedDestination(dest);
-                setIsModalOpen(true);
-                onMarkerClick && onMarkerClick(dest);
-              },
-            }}
-          >
-            <Popup maxWidth={300}>
-              <div className="p-2">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-xl">{dest.icon}</span>
-                  <strong className="text-lg">
-                    {language === 'pt' ? dest.name : dest.nameEn}
-                  </strong>
-                </div>
-                
-                <p className="text-sm text-gray-600 mb-3">
-                  {language === 'pt' ? dest.description : dest.descriptionEn}
-                </p>
-                
-                <div className="grid grid-cols-2 gap-2 text-xs text-gray-500 mb-3">
-                  <div>
-                    <span className="font-medium">
-                      {t('Duração:', 'Duration:')}
-                    </span>
-                    <br />
-                    {language === 'pt' ? dest.duration : dest.durationEn}
-                  </div>
-                  <div>
-                    <span className="font-medium">
-                      {t('Dificuldade:', 'Difficulty:')}
-                    </span>
-                    <br />
-                    {language === 'pt' ? dest.difficulty : dest.difficultyEn}
-                  </div>
-                </div>
-
-                {dest.contacts.whatsapp && (
-                  <a
-                    href={`https://wa.me/55${dest.contacts.whatsapp}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600 transition-colors"
-                  >
-                    📱 WhatsApp
-                  </a>
-                )}
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-
-        {/* Visualização da rota */}
-        <RouteVisualization userPos={userPos} routeData={routeData} />
-      </MapContainer>
+      </div>
 
       {/* Modal de detalhes do destino */}
-      <DestinationModal
-        destination={selectedDestination}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
-    </div>
+      {selectedDestination && (
+        <DestinationModal
+          destination={selectedDestination}
+          isOpen={!!selectedDestination}
+          onClose={() => {
+            console.log('Fechando modal do mapa');
+            setSelectedDestination(null);
+          }}
+        />
+      )}
+    </>
   );
 }

@@ -4,7 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 const CATEGORIES = [
   { id: 'all', iconClass: 'fa-solid fa-clipboard-list', labelPt: 'Todos', labelEn: 'All' },
   { id: 'Trilhas e ecoturismo', iconClass: 'fa-solid fa-hiking', labelPt: 'Trilhas e ecoturismo', labelEn: 'Trails and ecotourism' },
-  { id: 'Turismo cultural', iconClass: 'fa-solid fa-landmark', labelPt: 'Turismo cultural', labelEn: 'Cultural tourism' },
+  { id: 'Turismo cultural', iconClass: 'fa-solid fa-building', labelPt: 'Turismo cultural', labelEn: 'Cultural tourism' },
   { id: 'Gastronomia local', iconClass: 'fa-solid fa-utensils', labelPt: 'Gastronomia local', labelEn: 'Local gastronomy' },
   { id: 'Hospedagens e guias credenciados', iconClass: 'fa-solid fa-bed', labelPt: 'Hospedagens', labelEn: 'Accommodations' },
 

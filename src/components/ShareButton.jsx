@@ -11,19 +11,19 @@ export default function ShareButton({ destination, className = "" }) {
   const shareOptions = [
     {
       name: 'WhatsApp',
-      icon: 'fa-brands fa-whatsapp',
+      icon: 'fab fa-whatsapp',
       color: 'text-green-600',
       url: `https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`
     },
     {
       name: 'Facebook',
-      icon: 'fa-brands fa-facebook',
+      icon: 'fab fa-facebook',
       color: 'text-blue-600',
       url: `https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`
     },
     {
       name: 'Twitter',
-      icon: 'fa-brands fa-twitter',
+      icon: 'fab fa-twitter',
       color: 'text-blue-400',
       url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`
     },
@@ -55,7 +55,7 @@ export default function ShareButton({ destination, className = "" }) {
       </button>
 
       {showOptions && (
-        <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border p-2 z-[10000] min-w-[200px]">
+        <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border p-2 z-[10001] min-w-[200px]">
           <div className="text-sm font-medium text-gray-800 mb-2 px-2">
             {t('Compartilhar', 'Share')}
           </div>

@@ -17,10 +17,10 @@ export const DESTINATIONS = [
     highlightsEn: ['Panoramic view', 'Ecological trails', 'Sunset', 'Bird watching'],
     lat: -20.4842,
     lon: -55.8085,
-              images: [
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop'
+    images: [
+      '/src/assets/images/Paxixi/PorDoSol.jpg',
+      '/src/assets/images/Paxixi/Morro-do-Paxixi-1200x630.jpg.webp',
+      '/src/assets/images/Paxixi/mirante-morro-paxixi-aquidauana.jpg'
     ],
     schedule: {
       weekdays: '06:00 - 18:00',
@@ -65,9 +65,9 @@ export const DESTINATIONS = [
     lat: -20.4903,
     lon: -55.8902,
     images: [
-      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop'
+      '/src/assets/images/SerraMaracaju/serra_maracaju_3.jpg',
+      '/src/assets/images/SerraMaracaju/Serra-de-Maracaju-com-lago.jpeg',
+      '/src/assets/images/SerraMaracaju/Serra_de_Maracaju.jpg'
     ],
     schedule: {
       weekdays: '07:00 - 17:00',
@@ -112,9 +112,9 @@ export const DESTINATIONS = [
     lat: -20.4701,
     lon: -55.7864,
     images: [
-      'https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop'
+      '/src/assets/images/MuseuAquidauana/MuseuMarechalJosé.jpg',
+      '/src/assets/images/MuseuAquidauana/MuseuArtePantaneira.webp',
+      '/src/assets/images/MuseuAquidauana/MuseuArtePantaneira2.jpg'
     ],
     schedule: {
       weekdays: '08:00 - 17:00',
@@ -138,12 +138,12 @@ export const DESTINATIONS = [
     weatherEn: 'Air-conditioned environment. Year-round visitation.',
     clothing: 'Roupas casuais. Calçados fechados recomendados.',
     clothingEn: 'Casual clothing. Closed shoes recommended.',
-    icon: 'fa-solid fa-landmark'
+    icon: 'fa-solid fa-building'
   },
   {
     id: 4,
-    name: 'Cachoeira do Aquidaban',
-    nameEn: 'Aquidaban Waterfall',
+    name: 'Cachoeira do Aquidauana',
+    nameEn: 'Aquidauana Waterfall',
     description: 'Cachoeira com piscinas naturais e área para camping.',
     descriptionEn: 'Waterfall with natural pools and camping area.',
     fullDescription: 'Uma das mais belas cachoeiras da região, com quedas d\'água de 15 metros, piscinas naturais para banho e área estruturada para camping e piquenique.',
@@ -159,9 +159,9 @@ export const DESTINATIONS = [
     lat: -20.4512,
     lon: -55.7923,
     images: [
-      'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&h=600&fit=crop'
+      '/src/assets/images/CachoeiraAquidauana/CachoeiraAquidauana.jpg',
+      '/src/assets/images/CachoeiraAquidauana/CachoeiraAquidauana2.jpg',
+      '/src/assets/images/CachoeiraAquidauana/CachoeiraAquidauana3.jpg'
     ],
     schedule: {
       weekdays: '08:00 - 17:00',
@@ -206,9 +206,9 @@ export const DESTINATIONS = [
     lat: -20.4234,
     lon: -55.8156,
     images: [
-      'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop'
+      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel.jpg',
+      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel2.jpg',
+      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel3.jpeg'
     ],
     schedule: {
       weekdays: '07:00 - 22:00',
@@ -253,9 +253,9 @@ export const DESTINATIONS = [
     lat: -20.4708,
     lon: -55.7872,
     images: [
-      'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1518998053901-5348d3961a04?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&h=600&fit=crop'
+      '/src/assets/images/CentroHistorico/CentroHistorico.jpg',
+      '/src/assets/images/CentroHistorico/CentroHistorico2.jpg',
+      '/src/assets/images/CentroHistorico/CentroHistorico3.jpg'
     ],
     schedule: {
       weekdays: '24 horas',
@@ -279,7 +279,7 @@ export const DESTINATIONS = [
     weatherEn: 'Year-round visitation. Beware of strong sun at midday.',
     clothing: 'Roupas confortáveis, calçados para caminhada, protetor solar.',
     clothingEn: 'Comfortable clothes, walking shoes, sunscreen.',
-    icon: 'fa-solid fa-landmark'
+    icon: 'fa-solid fa-building'
   },
   {
     id: 7,
@@ -300,9 +300,9 @@ export const DESTINATIONS = [
     lat: -20.4689,
     lon: -55.7901,
     images: [
-      'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop'
+      '/src/assets/images/RestaurantePantaneiro/EstacaoPantaneira.jpg',
+      '/src/assets/images/RestaurantePantaneiro/RanchoDoPescador.jpg',
+      '/src/assets/images/RestaurantePantaneiro/RestauranteCasarao.png'
     ],
     schedule: {
       weekdays: '11:00 - 14:00, 18:00 - 22:00',
@@ -347,9 +347,9 @@ export const DESTINATIONS = [
     lat: -20.4567,
     lon: -55.8234,
     images: [
-      'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&h=600&fit=crop'
+      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel.jpg',
+      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel2.jpg',
+      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel3.jpeg'
     ],
     schedule: {
       weekdays: '24 horas (check-in: 14:00)',

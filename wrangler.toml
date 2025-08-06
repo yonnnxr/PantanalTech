@@ -1,4 +1,4 @@
-name = "rota-serra-paxixi"
+name = "rota-serra-charme-paxixi"
 compatibility_date = "2025-08-04"
 main = "src/worker.js"
 

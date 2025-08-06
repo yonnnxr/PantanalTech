@@ -11,6 +11,296 @@ body,
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
+/* Garantir que o scroll funcione corretamente */
+body {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Garantir que o scroll funcione em todas as páginas */
+.min-h-screen {
+  min-height: 100vh;
+  overflow-y: auto;
+}
+
+/* Garantir que containers com altura fixa permitam scroll interno quando necessário */
+.h-screen {
+  overflow-y: auto;
+}
+
+/* Navbar otimizada */
+nav {
+  min-height: 80px;
+  max-height: 80px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 10000 !important;
+}
+
+/* Garantir que a navbar sempre fique visível */
+nav.fixed {
+  position: fixed !important;
+  z-index: 10000 !important;
+}
+
+/* Garantir que os itens centralizados da navbar tenham espaço adequado */
+nav .flex-1 {
+  flex: 1 1 auto;
+}
+
+/* Garantir que a logo não seja afetada pelo layout flex */
+nav .flex.items-center:first-child {
+  flex-shrink: 0;
+}
+
+/* Ajustar espaçamento do conteúdo principal */
+main {
+  padding-top: 100px;
+}
+
+@media (min-width: 640px) {
+  main {
+    padding-top: 100px;
+  }
+}
+
+/* Garantir que o scroll funcione em containers flex */
+.flex {
+  overflow: visible;
+}
+
+/* Regras específicas para modais */
+.modal-backdrop {
+  z-index: 9999 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+}
+
+.modal-content {
+  z-index: 10000 !important;
+  position: relative !important;
+}
+
+/* Garantir que o modal seja centralizado */
+.modal-center {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 100vh !important;
+}
+
+/* Garantir que o modal seja renderizado corretamente */
+.modal-backdrop {
+  backdrop-filter: blur(4px) !important;
+}
+
+/* Garantir que o conteúdo do modal seja visível */
+.modal-content {
+  transform: translateZ(0) !important;
+  will-change: transform !important;
+}
+
+/* Sistema de z-index organizado */
+.navbar {
+  z-index: 10000 !important;
+}
+
+.modal-backdrop {
+  z-index: 10001 !important;
+}
+
+.modal-content {
+  z-index: 10002 !important;
+}
+
+/* Hero section z-index */
+.hero-section {
+  z-index: 1 !important;
+  position: relative !important;
+  margin-top: 80px !important;
+}
+
+.hero-background {
+  z-index: 0 !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: fixed !important;
+  will-change: transform !important;
+  transform-origin: center center !important;
+}
+
+.hero-overlay {
+  z-index: 1 !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+}
+
+.hero-content {
+  z-index: 2 !important;
+  position: relative !important;
+}
+
+/* Garantir que botões do modal sejam clicáveis */
+.modal-content button,
+.modal-content a {
+  position: relative !important;
+  pointer-events: auto !important;
+}
+
+/* Garantir que dropdowns do modal funcionem */
+.modal-content .absolute {
+  position: absolute !important;
+}
+
+/* Garantir que botões absolutos do modal tenham z-index correto */
+.modal-content .absolute.z-10 {
+  z-index: 10 !important;
+}
+
+/* Garantir que o modal de confirmação fique acima de tudo */
+.modal-backdrop.z-\[10000\] {
+  z-index: 10000 !important;
+}
+
+/* Garantir que dropdowns do ShareButton fiquem visíveis */
+.z-\[10001\] {
+  z-index: 10001 !important;
+}
+
+/* Garantir que o modal apareça corretamente */
+.modal-backdrop {
+  z-index: 10000 !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+}
+
+.modal-content {
+  z-index: 10001 !important;
+  position: relative !important;
+}
+
+/* Garantir que o scroll seja restaurado corretamente */
+body.modal-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
+body:not(.modal-open) {
+  overflow: auto !important;
+  position: static !important;
+}
+
+/* Scroll indicator centralizado */
+.scroll-indicator {
+  position: absolute !important;
+  bottom: 2rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+}
+
+.hero-section .scroll-indicator {
+  position: absolute !important;
+  bottom: 2rem !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 10 !important;
+}
+
+/* Garantir que o logo não seja limitado pelo container */
+.logo-container img {
+  flex-shrink: 0 !important;
+  min-width: auto !important;
+  min-height: auto !important;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+/* Melhorar carregamento da imagem hero */
+.hero-section {
+  min-height: 100vh !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.hero-background {
+  min-height: 100vh !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* Garantir que a imagem funcione em dispositivos móveis */
+@media (max-width: 768px) {
+  .hero-background {
+    background-attachment: scroll !important;
+  }
+}
+
+/* Garantir que ícones Font Awesome sejam exibidos corretamente */
+.fa-solid,
+.fa-regular,
+.fa-brands {
+  display: inline-block !important;
+  font-style: normal !important;
+  font-variant: normal !important;
+  text-rendering: auto !important;
+  -webkit-font-smoothing: antialiased !important;
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+}
+
+/* Garantir que ícones específicos sejam exibidos */
+.fa-solid.fa-building,
+.fa-solid.fa-mountain,
+.fa-solid.fa-water,
+.fa-solid.fa-tractor,
+.fa-solid.fa-utensils,
+.fa-solid.fa-bed,
+.fa-solid.fa-landmark-dome {
+  display: inline-block !important;
+  font-family: "Font Awesome 6 Free", "Font Awesome 7 Free" !important;
+  font-weight: 900 !important;
+}
+
+/* Garantir que ícones de marcas sejam exibidos */
+.fab,
+.fa-brands {
+  display: inline-block !important;
+  font-family: "Font Awesome 6 Brands", "Font Awesome 7 Brands" !important;
+  font-weight: 400 !important;
+}
+
+.fab.fa-whatsapp,
+.fa-brands.fa-whatsapp {
+  display: inline-block !important;
+  font-family: "Font Awesome 6 Brands", "Font Awesome 7 Brands" !important;
+  font-weight: 400 !important;
+}
+
+
+
 .leaflet-container {
   height: 100%;
 }
@@ -31,6 +321,14 @@ html {
 /* Leaflet map z-index fix */
 .leaflet-container {
   z-index: 1 !important;
+  height: 100% !important;
+width: 100% !important;
+min-height: 400px !important;
+}
+
+/* Garantir que o Leaflet não interfira com o modal */
+.leaflet-container:has(+ .modal-backdrop) {
+  z-index: 0 !important;
 }
 
 .leaflet-control-container {
@@ -39,6 +337,39 @@ html {
 
 .leaflet-popup {
   z-index: 1001 !important;
+}
+
+/* Garantir que o mapa seja visível */
+.leaflet-map-pane {
+  z-index: 1 !important;
+}
+
+.leaflet-tile-pane {
+  z-index: 1 !important;
+}
+
+/* Forçar visibilidade do mapa */
+.leaflet-container {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* Garantir que o container do mapa tenha altura */
+.leaflet-container,
+.leaflet-container .leaflet-map-pane,
+.leaflet-container .leaflet-tile-pane {
+  height: 100% !important;
+  min-height: 400px !important;
+}
+
+/* Garantir que o mapa seja renderizado corretamente */
+.leaflet-container {
+  background: #f4f4f4 !important;
+}
+
+.leaflet-container .leaflet-tile {
+  filter: none !important;
 }
 
 /* Custom scrollbar */

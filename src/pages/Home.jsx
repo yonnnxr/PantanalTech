@@ -5,24 +5,23 @@ import { useLanguage } from '../contexts/LanguageContext';
 import InteractiveMap from '../components/InteractiveMap';
 import AdvancedFilters from '../components/AdvancedFilters';
 import DestinationCard from '../components/DestinationCard';
+import DestinationModal from '../components/DestinationModal';
 import RouteBuilder from '../components/RouteBuilder';
-import LanguageToggle from '../components/LanguageToggle';
 import heroImage from '../assets/images/paxixi_thumb.jpg';
 import { getRandomHeroImage, MS_IMAGES } from '../data/images';
-import ThemeToggle from '../components/ThemeToggle';
 import AccessibilityPanel from '../components/AccessibilityPanel';
 import AutoRouteGenerator from '../components/AutoRouteGenerator';
 import ImageGallery from '../components/ImageGallery';
-import Logo from '../components/Logo';
+import HeroSection from '../components/HeroSection';
+import AppFooter from '../components/AppFooter';
 
 export default function Home() {
   const [filteredDestinations, setFilteredDestinations] = useState(DESTINATIONS);
   const [selectedDestination, setSelectedDestination] = useState(null);
   const [userPos, setUserPos] = useState(null);
-  const [showMiniMap, setShowMiniMap] = useState(false);
   const { language, t } = useLanguage();
 
-  // Scroll parallax effect
+  // Parallax convertido para CSS - nenhuma lógica JS necessária
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.pageYOffset;
@@ -33,7 +32,7 @@ export default function Home() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    /* retorno removido */
   }, []);
 
   // Scroll reveal animations
@@ -41,7 +40,7 @@ export default function Home() {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
+          if (entry.isIntersecting && !entry.target.classList.contains('animate-fadeInUp')) {
             entry.target.classList.add('animate-fadeInUp');
           }
         });
@@ -49,150 +48,25 @@ export default function Home() {
       { threshold: 0.1 }
     );
 
-    document.querySelectorAll('.scroll-reveal').forEach((el) => {
+    const elements = document.querySelectorAll('.scroll-reveal');
+    elements.forEach((el) => {
       observer.observe(el);
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+    };
   }, []);
 
-  return (
+    return (
     <div className="min-h-screen flex flex-col bg-gray-50">
-      {/* Hero Section Fullscreen com Parallax */}
-      <header className="relative text-white overflow-hidden h-screen flex flex-col justify-center">
-        {/* Background com Parallax */}
-        <div
-          className="parallax-bg absolute inset-0 bg-cover bg-center bg-no-repeat scale-110"
-          style={{
-            backgroundImage: `url(${heroImage})`,
-          }}
-        ></div>
-        
-        {/* Overlay gradiente */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70"></div>
-        
-        {/* Navegação fixa */}
-        <nav className="fixed inset-x-0 top-0 z-50 backdrop-blur-md bg-black/20 transition-all duration-300">
-          <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
-            <div className="flex items-center space-x-4">
-              <Logo 
-                size="medium" 
-                textColor="text-white" 
-                className="hover:opacity-90"
-              />
-            </div>
-            <div className="flex items-center space-x-4">
-              <button
-                onClick={() => setShowMiniMap(!showMiniMap)}
-                className="p-2 rounded-full hover:bg-white/10 transition-colors"
-                title={t('Mini Mapa', 'Mini Map')}
-              >
-                <i className="fa-solid fa-map text-lg"></i>
-              </button>
-              <ThemeToggle className="text-white" />
-              <LanguageToggle />
-            </div>
-          </div>
-        </nav>
-
-        {/* Conteúdo Hero */}
-        <div className="relative z-20 container mx-auto px-6 h-full flex items-center">
-          <div className="max-w-4xl">
-            {/* Frase de Impacto */}
-            <div className="mb-8 animate-fadeInUp">
-              <h1 className="text-6xl md:text-7xl font-bold mb-6 leading-tight bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-                {t('Descubra o Paraíso', 'Discover Paradise')}
-              </h1>
-              <h2 className="text-2xl md:text-3xl mb-8 text-blue-100 font-light">
-                {t('Serra & Paxixi - Aquidauana, MS', 'Serra & Paxixi - Aquidauana, MS')}
-              </h2>
-              <p className="text-xl md:text-2xl mb-12 max-w-3xl leading-relaxed text-gray-200">
-                {t(
-                  'Uma jornada única pelas belezas naturais, trilhas deslumbrantes e rica cultura pantaneira. Deixe-nos guiá-lo pela experiência perfeita.',
-                  'A unique journey through natural beauty, stunning trails and rich Pantanal culture. Let us guide you through the perfect experience.'
-                )}
-              </p>
-            </div>
-
-            {/* Botão Principal */}
-            <div className="animate-fadeInUp animation-delay-300">
-              <a
-                href="#experiencias"
-                className="inline-flex items-center bg-gradient-to-r from-blue-600 to-teal-500 text-white px-12 py-6 rounded-full text-xl font-bold shadow-2xl hover:shadow-blue-500/25 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1"
-              >
-                <i className="fa-solid fa-compass mr-3 text-2xl"></i>
-                {t('Explorar a Rota', 'Explore the Route')}
-              </a>
-            </div>
-
-            {/* Atalhos Rápidos */}
-            <div className="mt-16 animate-fadeInUp animation-delay-500">
-              <div className="flex flex-wrap gap-4">
-                <a
-                  href="#destinos"
-                  className="flex items-center bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-full font-medium hover:bg-white/20 transition-all duration-300"
-                >
-                  <i className="fa-solid fa-mountain mr-2"></i>
-                  {t('Pontos Turísticos', 'Tourist Spots')}
-                </a>
-                <a
-                  href="#roteiro"
-                  className="flex items-center bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-full font-medium hover:bg-white/20 transition-all duration-300"
-                >
-                  <i className="fa-solid fa-route mr-2"></i>
-                  {t('Roteiro Ideal', 'Ideal Itinerary')}
-                </a>
-                <Link
-                  to="/como-chegar"
-                  className="flex items-center bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-full font-medium hover:bg-white/20 transition-all duration-300"
-                >
-                  <i className="fa-solid fa-directions mr-2"></i>
-                  {t('Como Chegar', 'How to Get There')}
-                </Link>
-                <Link
-                  to="/gallery"
-                  className="flex items-center bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-full font-medium hover:bg-white/20 transition-all duration-300"
-                >
-                  <i className="fa-solid fa-images mr-2"></i>
-                  {t('Galeria', 'Gallery')}
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Mini-mapa flutuante */}
-          {showMiniMap && (
-            <div className="fixed top-20 right-6 w-80 h-60 bg-white rounded-xl shadow-2xl z-40 overflow-hidden animate-fadeInUp">
-              <div className="p-3 bg-gradient-to-r from-blue-600 to-teal-500 text-white">
-                <div className="flex items-center justify-between">
-                  <span className="font-semibold">{t('Sua Localização', 'Your Location')}</span>
-                  <button
-                    onClick={() => setShowMiniMap(false)}
-                    className="p-1 hover:bg-white/20 rounded"
-                  >
-                    <i className="fa-solid fa-times"></i>
-                  </button>
-                </div>
-              </div>
-              <div className="h-48">
-                <InteractiveMap
-                  destinations={DESTINATIONS.slice(0, 3)}
-                  className="h-full"
-                  routeData={null}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 animate-bounce">
-          <div className="flex flex-col items-center text-white/70">
-            <span className="text-sm mb-2">{t('Role para explorar', 'Scroll to explore')}</span>
-            <i className="fa-solid fa-chevron-down text-2xl"></i>
-          </div>
-        </div>
-      </header>
+      {/* Hero Section */}
+      <HeroSection 
+        heroImage={heroImage}
+        destinations={DESTINATIONS}
+        selectedDestination={selectedDestination}
+        setSelectedDestination={setSelectedDestination}
+      />
 
       {/* Seção Experiências Imperdíveis */}
       <section id="experiencias" className="py-24 bg-white scroll-reveal">
@@ -203,8 +77,8 @@ export default function Home() {
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               {t(
-                'Descubra os tesouros escondidos da Serra & Paxixi através de experiências únicas e inesquecíveis',
-                'Discover the hidden treasures of Serra & Paxixi through unique and unforgettable experiences'
+                              'Descubra os tesouros escondidos da Rota Serra e Charme Paxixi através de experiências únicas e inesquecíveis',
+              'Discover the hidden treasures of Rota Serra e Charme Paxixi through unique and unforgettable experiences'
               )}
             </p>
           </div>
@@ -233,7 +107,7 @@ export default function Home() {
             {/* Card 2 - Cultura */}
             <div className="group bg-gradient-to-br from-purple-50 to-indigo-50 rounded-2xl p-8 hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
               <div className="text-purple-600 text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">
-                <i className="fa-solid fa-landmark-dome"></i>
+                <i className="fa-solid fa-building"></i>
               </div>
               <h3 className="text-2xl font-bold text-gray-800 mb-4">
                 {t('Cultura Pantaneira', 'Pantanal Culture')}
@@ -477,7 +351,11 @@ export default function Home() {
           
           <InteractiveMap 
             destinations={DESTINATIONS}
-            onMarkerClick={setSelectedDestination}
+            onMarkerClick={(dest) => {
+              if (selectedDestination?.id !== dest.id) {
+                setSelectedDestination(dest);
+              }
+            }}
             className="h-96 mb-8"
             routeData={null}
           />
@@ -632,7 +510,11 @@ export default function Home() {
               <DestinationCard
                 key={dest.id}
                 destination={dest}
-                onSelect={setSelectedDestination}
+                onSelect={(dest) => {
+                  if (selectedDestination?.id !== dest.id) {
+                    setSelectedDestination(dest);
+                  }
+                }}
                 isSelected={selectedDestination?.id === dest.id}
               />
             ))}
@@ -641,42 +523,16 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-12">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div>
-              <Logo 
-                size="large" 
-                textColor="text-white" 
-                className="mb-4"
-              />
-              <p className="text-gray-400">
-                {t(
-                  'Descubra as belezas naturais e culturais de Aquidauana no coração do Pantanal.',
-                  'Discover the natural and cultural beauties of Aquidauana in the heart of the Pantanal.'
-                )}
-              </p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">{t('Contato', 'Contact')}</h4>
-              <p className="text-gray-400 mb-2">📧 info@rotaserra.com.br</p>
-              <p className="text-gray-400 mb-2">📱 (67) 3241-0000</p>
-              <p className="text-gray-400">📍 Aquidauana, MS</p>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-4">{t('Siga-nos', 'Follow us')}</h4>
-              <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Facebook</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">Instagram</a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">YouTube</a>
-              </div>
-            </div>
-          </div>
-          <div className="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 {t('Rota Serra & Paxixi. Todos os direitos reservados.', 'Serra & Paxixi Route. All rights reserved.')}</p>
-          </div>
-        </div>
-      </footer>
+      <AppFooter />
+
+      {/* Destination Modal */}
+      {selectedDestination && (
+        <DestinationModal
+          destination={selectedDestination}
+          isOpen={!!selectedDestination}
+          onClose={() => setSelectedDestination(null)}
+        />
+      )}
 
       {/* Accessibility Panel */}
       <AccessibilityPanel />

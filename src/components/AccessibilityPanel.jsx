@@ -12,7 +12,7 @@ export default function AccessibilityPanel() {
       {/* Botão de acessibilidade flutuante */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-4 right-4 z-[9998] bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+        className="fixed bottom-4 right-4 z-[9900] bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
         aria-label={t('Opções de acessibilidade', 'Accessibility options')}
       >
         <i className='fa-solid fa-gear'></i>
@@ -20,7 +20,7 @@ export default function AccessibilityPanel() {
 
       {/* Painel de acessibilidade */}
       {isOpen && (
-        <div className="fixed bottom-20 right-4 z-[9998] bg-white border border-gray-300 rounded-lg shadow-xl p-4 w-64">
+        <div className="fixed bottom-20 right-4 z-[9900] bg-white border border-gray-300 rounded-lg shadow-xl p-4 w-64">
           <h3 className="font-bold mb-4 text-gray-800">
             {t('Acessibilidade', 'Accessibility')}
           </h3>

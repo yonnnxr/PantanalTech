@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useRoute } from '../contexts/RouteContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import TransportModeSelector from './TransportModeSelector';
+import { Z_INDEX } from '../utils/zIndex';
 
 // Função para calcular rota otimizada (algoritmo simples do vizinho mais próximo)
 const optimizeRoute = (destinations, startPoint) => {
@@ -153,7 +154,10 @@ export default function RouteBuilder({ userPos }) {
 
   if (selectedDestinations.length === 0) {
     return (
-      <div className="bg-white p-6 rounded-lg shadow-sm border text-center relative z-30">
+      <div 
+        className="bg-white p-6 rounded-lg shadow-sm border text-center"
+        style={{ zIndex: Z_INDEX.CONTENT }}
+      >
         <div className="text-gray-400 text-4xl mb-4"><i className="fa-solid fa-location-dot"></i></div>
         <h3 className="font-semibold text-gray-800 mb-2">
           {t('Monte sua Rota', 'Build your Route')}
@@ -169,7 +173,10 @@ export default function RouteBuilder({ userPos }) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border overflow-hidden relative z-30">
+    <div 
+      className="bg-white rounded-lg shadow-sm border overflow-hidden"
+      style={{ zIndex: Z_INDEX.CONTENT }}
+    >
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-500 to-teal-500 text-white p-4">
         <div className="flex items-center justify-between">
@@ -205,7 +212,7 @@ export default function RouteBuilder({ userPos }) {
                 disabled={isOptimizing}
                 className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded hover:bg-blue-200 transition-colors disabled:opacity-50"
               >
-                {isOptimizing ? '⏳' : '🔄'} {t('Otimizar', 'Optimize')}
+                {isOptimizing ? <i className="fa-solid fa-spinner fa-spin mr-1"></i> : <i className="fa-solid fa-arrows-rotate mr-1"></i>} {t('Otimizar', 'Optimize')}
               </button>
             )}
           </div>

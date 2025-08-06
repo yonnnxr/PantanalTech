@@ -17,7 +17,7 @@ export default function AutoRouteGenerator() {
 
   const interestOptions = [
     { id: 'trilhas', label: t('Trilhas e Ecoturismo', 'Trails and Ecotourism'), icon: 'fa-solid fa-mountain' },
-    { id: 'cultura', label: t('Cultura e História', 'Culture and History'), icon: 'fa-solid fa-landmark' },
+    { id: 'cultura', label: t('Cultura e História', 'Culture and History'), icon: 'fa-solid fa-building' },
     { id: 'gastronomia', label: t('Gastronomia Local', 'Local Gastronomy'), icon: 'fa-solid fa-utensils' },
     { id: 'hospedagem', label: t('Hospedagem', 'Accommodation'), icon: 'fa-solid fa-bed' }
   ];

@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useRoute } from '../contexts/RouteContext';
-import { FavoriteButton } from './FavoritesManager';
 import DestinationModal from './DestinationModal';
+import { FavoriteButton } from './FavoritesManager';
+import { Z_INDEX } from '../utils/zIndex';
 
 export default function DestinationCard({ destination, onSelect, isSelected }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { language, t } = useLanguage();
   const { addDestination, removeDestination, selectedDestinations } = useRoute();
-
-  const isInRoute = selectedDestinations.some(d => d.id === destination.id);
 
   const nextImage = (e) => {
     e.stopPropagation();
@@ -35,18 +34,23 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
     }
   };
 
+  const isInRoute = selectedDestinations.some(d => d.id === destination.id);
+
   const categoryColors = {
     'Trilhas e ecoturismo': 'bg-green-100 text-green-800',
-    'Turismo cultural': 'bg-purple-100 text-purple-800',
+    'Trails and ecotourism': 'bg-green-100 text-green-800',
+    'Turismo cultural': 'bg-blue-100 text-blue-800',
+    'Cultural tourism': 'bg-blue-100 text-blue-800',
     'Gastronomia local': 'bg-orange-100 text-orange-800',
-    'Hospedagens e guias credenciados': 'bg-blue-100 text-blue-800',
+    'Local gastronomy': 'bg-orange-100 text-orange-800',
+    'Hospedagens e guias credenciados': 'bg-purple-100 text-purple-800',
+    'Accommodations and certified guides': 'bg-purple-100 text-purple-800'
   };
 
   const difficultyColors = {
     'Fácil': 'text-green-600',
-    'Moderada': 'text-yellow-600',
-    'Difícil': 'text-red-600',
     'Easy': 'text-green-600',
+    'Moderada': 'text-yellow-600',
     'Moderate': 'text-yellow-600',
     'Hard': 'text-red-600',
   };
@@ -56,12 +60,15 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
 
   return (
     <div
-      className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer relative z-20 ${
+      className={`bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer ${
         isSelected ? 'ring-2 ring-blue-500' : ''
       }`}
+      style={{ zIndex: 0 }}
       onClick={() => {
-        setIsModalOpen(true);
-        onSelect && onSelect(destination);
+        if (!isModalOpen) {
+          setIsModalOpen(true);
+          onSelect && onSelect(destination);
+        }
       }}
     >
       {/* Galeria de imagens */}
@@ -157,63 +164,64 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
           <span className="font-medium">{t('Horários:', 'Schedule:')}</span>
           <div>{schedule.weekdays}</div>
           {schedule.closed !== 'Nunca fechado' && schedule.closed !== 'Never closed' && (
-            <div className="text-red-500">{t('Fechado:', 'Closed:')} {schedule.closed}</div>
-          )}
-        </div>
-
-        {/* Contatos */}
-        <div className="flex gap-2 mb-3">
-          {destination.contacts.whatsapp && (
-            <a
-              href={`https://wa.me/55${destination.contacts.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded text-xs hover:bg-green-600 transition-colors"
-            >
-              <i className='fa-brands fa-whatsapp'></i>
-            </a>
-          )}
-          {destination.contacts.instagram && (
-            <a
-              href={`https://instagram.com/${destination.contacts.instagram.replace('@', '')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1 bg-pink-500 text-white px-2 py-1 rounded text-xs hover:bg-pink-600 transition-colors"
-            >
-              <i className='fa-brands fa-instagram'></i>
-            </a>
-          )}
-          {destination.contacts.phone && (
-            <a
-              href={`tel:${destination.contacts.phone}`}
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1 bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 transition-colors"
-            >
-              <i className='fa-solid fa-phone'></i>
-            </a>
+            <div className="text-red-600">{schedule.closed}</div>
           )}
         </div>
 
         {/* Destaques */}
-        <div className="flex flex-wrap gap-1">
-          {(language === 'pt' ? destination.highlights : destination.highlightsEn)
-            .slice(0, 2)
-            .map((highlight, idx) => (
-              <span
-                key={idx}
-                className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
-              >
-                {highlight}
-              </span>
-            ))
-          }
-          {destination.highlights.length > 2 && (
+        <div className="flex flex-wrap gap-1 mb-3">
+          {(language === 'pt' ? destination.highlights : destination.highlightsEn).slice(0, 3).map((highlight, idx) => (
+            <span
+              key={idx}
+              className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+            >
+              {highlight}
+            </span>
+          ))}
+          {(language === 'pt' ? destination.highlights : destination.highlightsEn).length > 3 && (
             <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-              +{destination.highlights.length - 2}
+              +{(language === 'pt' ? destination.highlights : destination.highlightsEn).length - 3}
             </span>
           )}
+        </div>
+
+        {/* Botão de ação */}
+        <div className="flex justify-between items-center">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsModalOpen(true);
+            }}
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors"
+          >
+            {t('Ver detalhes', 'View details')} →
+          </button>
+          
+          <div className="flex items-center gap-2">
+            {destination.contacts.phone && (
+              <a
+                href={`tel:${destination.contacts.phone}`}
+                onClick={(e) => e.stopPropagation()}
+                className="text-green-600 hover:text-green-700 transition-colors"
+                title={t('Ligar', 'Call')}
+              >
+                <i className="fa-solid fa-phone text-sm"></i>
+              </a>
+            )}
+            
+            {destination.contacts.whatsapp && (
+              <a
+                href={`https://wa.me/55${destination.contacts.whatsapp}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="text-green-600 hover:text-green-700 transition-colors"
+                title="WhatsApp"
+              >
+                <i className="fab fa-whatsapp text-sm"></i>
+              </a>
+            )}
+          </div>
         </div>
       </div>
 

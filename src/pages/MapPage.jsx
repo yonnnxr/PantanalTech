@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import MapView from '../components/MapView';
 import DestinationList from '../components/DestinationList';
 import { DESTINATIONS } from '../data/destinations';
-import Logo from '../components/Logo';
+import Navbar from '../components/Navbar';
 
 export default function MapPage() {
   const [userPos, setUserPos] = useState(null);
@@ -67,39 +67,29 @@ export default function MapPage() {
   const costKm = 2.5;
 
   return (
-    <div className="flex h-full bg-gray-100">
-      {/* Header fixo */}
-      <div className="fixed top-0 left-0 right-0 z-20 bg-white shadow-sm border-b">
-        <div className="flex items-center justify-between px-4 py-3">
-          <div className="flex items-center space-x-4">
-            <button
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-              className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
-            </button>
-            <Logo 
-              size="small" 
-              textColor="text-gray-800" 
-              className="hover:opacity-90"
-            />
-          </div>
-          <Link
-            to="/"
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            🏠 Início
-          </Link>
-        </div>
-      </div>
+    <div className="flex h-screen bg-gray-100">
+      <Navbar variant="map">
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-1.5 rounded hover:bg-gray-100 transition-colors"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <Link
+          to="/"
+          className="px-3 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700 transition-colors"
+        >
+          🏠 Início
+        </Link>
+      </Navbar>
 
       {/* Sidebar */}
-      <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300 overflow-hidden`}>
-        <div className="w-80 h-full bg-white shadow-lg pt-16 overflow-y-auto">
+      <div className={`${sidebarOpen ? 'w-80' : 'w-0'} transition-all duration-300`}>
+        <div className="w-80 h-full bg-white shadow-lg pt-24 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 80px)' }}>
           <DestinationList
-            destinations={DESTINATIONS}
+            destinations={DESTINATIONS || []}
             onSelect={setSelectedDest}
             selectedId={selectedDest?.id}
           />
@@ -108,7 +98,7 @@ export default function MapPage() {
           {selectedDest && (
             <div className="border-t bg-gray-50 p-4 m-4 rounded-lg">
               <h2 className="font-bold text-lg mb-3 text-gray-800">
-                📍 {selectedDest.name}
+                <i className="fa-solid fa-location-dot mr-1"></i>{selectedDest.name}
               </h2>
               <p className="text-sm text-gray-600 mb-4">
                 {selectedDest.fullDescription}
@@ -117,7 +107,7 @@ export default function MapPage() {
               {routeData && (
                 <div className="space-y-3">
                   <h3 className="font-semibold text-gray-800 border-b pb-2">
-                    🗺️ Informações da Rota
+                    <i className="fa-solid fa-map mr-1"></i>Informações da Rota
                   </h3>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="bg-white p-3 rounded-lg text-center">
@@ -161,7 +151,7 @@ export default function MapPage() {
       </div>
 
       {/* Mapa */}
-      <div className="flex-1 pt-16">
+      <div className="flex-1 pt-10" style={{ height: 'calc(100vh - 40px)' }}>
         <MapView
           userPos={userPos}
           destinations={DESTINATIONS}

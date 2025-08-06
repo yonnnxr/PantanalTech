@@ -3,9 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { DESTINATIONS } from '../data/destinations';
 import { useLanguage } from '../contexts/LanguageContext';
 import InteractiveMap from '../components/InteractiveMap';
-import LanguageToggle from '../components/LanguageToggle';
 import heroImage from '../assets/images/paxixi_thumb.jpg';
-import Logo from '../components/Logo';
+import Navbar from '../components/Navbar';
 
 export default function ComoChegar() {
   const { id } = useParams();
@@ -70,7 +69,7 @@ export default function ComoChegar() {
     if (navigator.share) {
       navigator.share({
         title: `Como chegar: ${destination.name}`,
-        text: `Rota para ${destination.name} - Serra & Paxixi`,
+        text: `Rota para ${destination.name} - Rota Serra e Charme Paxixi`,
         url: window.location.href
       });
     } else {
@@ -81,35 +80,14 @@ export default function ComoChegar() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Logo 
-                size="small" 
-                textColor="text-gray-800" 
-                className="hover:opacity-90"
-              />
-              <div className="h-6 w-px bg-gray-300"></div>
-              <Link
-                to="/"
-                className="flex items-center text-blue-600 hover:text-blue-700 transition-colors"
-              >
-                <i className="fa-solid fa-arrow-left mr-2"></i>
-                {t('Voltar', 'Back')}
-              </Link>
-              <div className="h-6 w-px bg-gray-300"></div>
-              <h1 className="text-xl font-bold text-gray-800">
-                {t('Como Chegar', 'How to Get There')}
-              </h1>
-            </div>
-            <LanguageToggle textColor="text-gray-800" />
-          </div>
-        </div>
-      </header>
+      <Navbar 
+        variant="default"
+        showBackButton={true}
+        onBackClick={() => window.history.back()}
+        title={t('Como Chegar', 'How to Get There')}
+      />
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto px-6 py-8 pt-20">
         {/* Cabeçalho do destino */}
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-8">
           <div className="relative h-64">
@@ -301,7 +279,7 @@ export default function ComoChegar() {
                       <p><i className="fa-solid fa-phone mr-2"></i>{destination.contacts.phone}</p>
                     )}
                     {destination.contacts.whatsapp && (
-                      <p><i className="fa-brands fa-whatsapp mr-2"></i>{destination.contacts.whatsapp}</p>
+                      <p><i className="fab fa-whatsapp mr-2"></i>{destination.contacts.whatsapp}</p>
                     )}
                   </div>
                 </div>
