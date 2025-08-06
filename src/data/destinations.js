@@ -1,3 +1,5 @@
+import { getDestinationImages } from './images';
+
 export const DESTINATIONS = [
   {
     id: 1,
@@ -17,11 +19,7 @@ export const DESTINATIONS = [
     highlightsEn: ['Panoramic view', 'Ecological trails', 'Sunset', 'Bird watching'],
     lat: -20.4842,
     lon: -55.8085,
-    images: [
-      '/src/assets/images/Paxixi/PorDoSol.jpg',
-      '/src/assets/images/Paxixi/Morro-do-Paxixi-1200x630.jpg.webp',
-      '/src/assets/images/Paxixi/mirante-morro-paxixi-aquidauana.jpg'
-    ],
+    images: getDestinationImages(1),
     schedule: {
       weekdays: '06:00 - 18:00',
       weekends: '06:00 - 19:00',
@@ -64,11 +62,7 @@ export const DESTINATIONS = [
     highlightsEn: ['Waterfalls', 'Biodiversity', 'Varied trails', 'Unique geology'],
     lat: -20.4903,
     lon: -55.8902,
-    images: [
-      '/src/assets/images/SerraMaracaju/serra_maracaju_3.jpg',
-      '/src/assets/images/SerraMaracaju/Serra-de-Maracaju-com-lago.jpeg',
-      '/src/assets/images/SerraMaracaju/Serra_de_Maracaju.jpg'
-    ],
+    images: getDestinationImages(2),
     schedule: {
       weekdays: '07:00 - 17:00',
       weekends: '07:00 - 17:00',
@@ -111,11 +105,7 @@ export const DESTINATIONS = [
     highlightsEn: ['Regional history', 'Paraguayan War', 'Pantanal culture', 'Historical architecture'],
     lat: -20.4701,
     lon: -55.7864,
-    images: [
-      '/src/assets/images/MuseuAquidauana/MuseuMarechalJosé.jpg',
-      '/src/assets/images/MuseuAquidauana/MuseuArtePantaneira.webp',
-      '/src/assets/images/MuseuAquidauana/MuseuArtePantaneira2.jpg'
-    ],
+    images: getDestinationImages(3),
     schedule: {
       weekdays: '08:00 - 17:00',
       weekends: '08:00 - 12:00',
@@ -158,11 +148,7 @@ export const DESTINATIONS = [
     highlightsEn: ['Natural pools', 'Camping', '15m waterfall', 'Recreation area'],
     lat: -20.4512,
     lon: -55.7923,
-    images: [
-      '/src/assets/images/CachoeiraAquidauana/CachoeiraAquidauana.jpg',
-      '/src/assets/images/CachoeiraAquidauana/CachoeiraAquidauana2.jpg',
-      '/src/assets/images/CachoeiraAquidauana/CachoeiraAquidauana3.jpg'
-    ],
+    images: getDestinationImages(4),
     schedule: {
       weekdays: '08:00 - 17:00',
       weekends: '07:00 - 18:00',
@@ -205,11 +191,7 @@ export const DESTINATIONS = [
     highlightsEn: ['Horseback riding', 'Regional gastronomy', 'Fishing', 'Rural accommodation'],
     lat: -20.4234,
     lon: -55.8156,
-    images: [
-      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel.jpg',
-      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel2.jpg',
-      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel3.jpeg'
-    ],
+    images: getDestinationImages(5),
     schedule: {
       weekdays: '07:00 - 22:00',
       weekends: '07:00 - 22:00',
@@ -252,11 +234,7 @@ export const DESTINATIONS = [
     highlightsEn: ['Colonial architecture', 'Main church', 'Historic mansions', 'Tree-lined squares'],
     lat: -20.4708,
     lon: -55.7872,
-    images: [
-      '/src/assets/images/CentroHistorico/CentroHistorico.jpg',
-      '/src/assets/images/CentroHistorico/CentroHistorico2.jpg',
-      '/src/assets/images/CentroHistorico/CentroHistorico3.jpg'
-    ],
+    images: getDestinationImages(6),
     schedule: {
       weekdays: '24 horas',
       weekends: '24 horas',
@@ -299,11 +277,7 @@ export const DESTINATIONS = [
     highlightsEn: ['Pantanal cuisine', 'Regional fish', 'Rustic atmosphere', 'Typical desserts'],
     lat: -20.4689,
     lon: -55.7901,
-    images: [
-      '/src/assets/images/RestaurantePantaneiro/EstacaoPantaneira.jpg',
-      '/src/assets/images/RestaurantePantaneiro/RanchoDoPescador.jpg',
-      '/src/assets/images/RestaurantePantaneiro/RestauranteCasarao.png'
-    ],
+    images: getDestinationImages(7),
     schedule: {
       weekdays: '11:00 - 14:00, 18:00 - 22:00',
       weekends: '11:00 - 15:00, 18:00 - 23:00',
@@ -346,11 +320,7 @@ export const DESTINATIONS = [
     highlightsEn: ['Mountain view', 'Regional breakfast', 'Swimming pool', 'Strategic location'],
     lat: -20.4567,
     lon: -55.8234,
-    images: [
-      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel.jpg',
-      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel2.jpg',
-      '/src/assets/images/FazendaSaoMiguel/FazendaSaoMiguel3.jpeg'
-    ],
+    images: getDestinationImages(8),
     schedule: {
       weekdays: '24 horas (check-in: 14:00)',
       weekends: '24 horas (check-in: 14:00)',
