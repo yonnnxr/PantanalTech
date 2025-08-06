@@ -28,7 +28,7 @@ import restaurante2 from '../assets/images/RestaurantePantaneiro/RanchoDoPescado
 import restaurante3 from '../assets/images/RestaurantePantaneiro/RestauranteCasarao.png';
 
 // Hero images
-import heroImage from '../assets/images/paxixi_thumb.jpg';
+import heroImage from '../assets/images/paxixi_thumb1.jpg';
 
 // Gallery images
 import galleryPantanal1 from '../assets/images/gallery/pantanal/20210807_081244-1.jpg';

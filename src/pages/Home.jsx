@@ -7,7 +7,7 @@ import AdvancedFilters from '../components/AdvancedFilters';
 import DestinationCard from '../components/DestinationCard';
 import DestinationModal from '../components/DestinationModal';
 import RouteBuilder from '../components/RouteBuilder';
-import heroImage from '../assets/images/paxixi_thumb.jpg';
+import heroImage from '../assets/images/paxixi_thumb1.jpg';
 import { getRandomHeroImage, GALLERY_IMAGES } from '../data/images';
 import AccessibilityPanel from '../components/AccessibilityPanel';
 import AutoRouteGenerator from '../components/AutoRouteGenerator';

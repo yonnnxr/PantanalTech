@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { DESTINATIONS } from '../data/destinations';
 import { useLanguage } from '../contexts/LanguageContext';
 import InteractiveMap from '../components/InteractiveMap';
-import heroImage from '../assets/images/paxixi_thumb.jpg';
+import heroImage from '../assets/images/paxixi_thumb1.jpg';
 import Navbar from '../components/Navbar';
 
 export default function ComoChegar() {
