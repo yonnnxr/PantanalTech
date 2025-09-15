@@ -33,7 +33,11 @@ export default function Home() {
     };
 
     window.addEventListener('scroll', handleScroll);
-    /* retorno removido */
+    
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   // Scroll reveal animations
@@ -59,7 +63,30 @@ export default function Home() {
     };
   }, []);
 
-    return (
+  // Geolocalização do usuário
+  useEffect(() => {
+    if (navigator && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setUserPos([latitude, longitude]);
+        },
+        (error) => {
+          console.error('Erro ao obter localização:', error);
+          // Usar posição padrão se não conseguir obter a localização
+          setUserPos([-20.463, -55.789]);
+        }
+      );
+    } else {
+      // Usar posição padrão se o navegador não suportar geolocalização
+      setUserPos([-20.463, -55.789]);
+    }
+  }, []);
+
+  // Verificar se DESTINATIONS é um array válido
+  const validDestinations = Array.isArray(DESTINATIONS) ? DESTINATIONS : [];
+
+  return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       {/* Navbar */}
       <Navbar />
@@ -67,7 +94,7 @@ export default function Home() {
       {/* Hero Section */}
       <HeroSection 
         heroImage={heroImage}
-        destinations={DESTINATIONS}
+        destinations={validDestinations}
         selectedDestination={selectedDestination}
         setSelectedDestination={setSelectedDestination}
       />
@@ -81,8 +108,8 @@ export default function Home() {
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               {t(
-                              'Descubra os tesouros escondidos da Rota Serra e Charme Paxixi através de experiências únicas e inesquecíveis',
-              'Discover the hidden treasures of Rota Serra e Charme Paxixi through unique and unforgettable experiences'
+                'Descubra os tesouros escondidos da Rota Serra e Charme Paxixi através de experiências únicas e inesquecíveis',
+                'Discover the hidden treasures of Rota Serra e Charme Paxixi through unique and unforgettable experiences'
               )}
             </p>
           </div>
@@ -354,7 +381,7 @@ export default function Home() {
           </div>
           
           <InteractiveMap 
-            destinations={DESTINATIONS}
+            destinations={validDestinations}
             onMarkerClick={(dest) => {
               if (selectedDestination?.id !== dest.id) {
                 setSelectedDestination(dest);
@@ -362,6 +389,7 @@ export default function Home() {
             }}
             className="h-96 mb-8"
             routeData={null}
+            userPos={userPos}
           />
           
           {/* Route Builder */}
@@ -388,9 +416,12 @@ export default function Home() {
             {/* Pantanal */}
             <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
               <img 
-                src={GALLERY_IMAGES.pantanal[0]} 
+                src={GALLERY_IMAGES.pantanal && GALLERY_IMAGES.pantanal[0] ? GALLERY_IMAGES.pantanal[0] : ''} 
                 alt="Pantanal" 
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                onError={(e) => {
+                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbSBuw6NvIGRpcG9uw608L3RleHQ+PC9zdmc+';
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
               <div className="absolute bottom-4 left-4 text-white">
@@ -402,9 +433,12 @@ export default function Home() {
             {/* Serra */}
             <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
               <img 
-                src={GALLERY_IMAGES.serra[0]} 
+                src={GALLERY_IMAGES.serra && GALLERY_IMAGES.serra[0] ? GALLERY_IMAGES.serra[0] : ''} 
                 alt="Serra" 
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                onError={(e) => {
+                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbSBuw6NvIGRpcG9uw608L3RleHQ+PC9zdmc+';
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
               <div className="absolute bottom-4 left-4 text-white">
@@ -416,9 +450,12 @@ export default function Home() {
             {/* Fauna */}
             <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
               <img 
-                src={GALLERY_IMAGES.fauna[0]} 
+                src={GALLERY_IMAGES.fauna && GALLERY_IMAGES.fauna[0] ? GALLERY_IMAGES.fauna[0] : ''} 
                 alt="Fauna" 
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                onError={(e) => {
+                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbSBuw6NvIGRpcG9uw608L3RleHQ+PC9zdmc+';
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
               <div className="absolute bottom-4 left-4 text-white">
@@ -430,9 +467,12 @@ export default function Home() {
             {/* Flora */}
             <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500">
               <img 
-                src={GALLERY_IMAGES.flora[0]} 
+                src={GALLERY_IMAGES.flora && GALLERY_IMAGES.flora[0] ? GALLERY_IMAGES.flora[0] : ''} 
                 alt="Flora" 
                 className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                onError={(e) => {
+                  e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbSBuw6NvIGRpcG9uw608L3RleHQ+PC9zdmc+';
+                }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
               <div className="absolute bottom-4 left-4 text-white">
@@ -468,7 +508,7 @@ export default function Home() {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-3xl font-bold text-blue-600 mb-2">{DESTINATIONS.length}</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">{validDestinations.length}</div>
               <div className="text-gray-400">{t('Destinos', 'Destinations')}</div>
             </div>
             <div>
@@ -504,7 +544,7 @@ export default function Home() {
           
           {/* Advanced Filters */}
           <AdvancedFilters 
-            destinations={DESTINATIONS}
+            destinations={validDestinations}
             onFilterChange={setFilteredDestinations}
           />
           

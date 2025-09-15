@@ -42,7 +42,15 @@ export const DESTINATIONS = [
     weatherEn: 'Tropical climate. Avoid rainy days for better visibility.',
     clothing: 'Roupas leves, tênis ou bota de trilha, chapéu.',
     clothingEn: 'Light clothing, sneakers or hiking boots, hat.',
-    icon: 'fa-solid fa-mountain'
+    icon: 'fa-solid fa-mountain',
+    distance: '2.5 km',
+    city: 'Aquidauana',
+    state: 'MS',
+    region: 'Serra de Maracaju',
+    bestSeason: 'Maio a setembro',
+    bestSeasonEn: 'May to September',
+    capacity: '100 pessoas',
+    capacityEn: '100 people'
   },
   {
     id: 2,
@@ -85,7 +93,15 @@ export const DESTINATIONS = [
     weatherEn: 'Cooler temperature in the mountains. Frequent rains from December to March.',
     clothing: 'Roupa de trilha, bota impermeável, capa de chuva.',
     clothingEn: 'Trail clothing, waterproof boots, rain cape.',
-    icon: 'fa-solid fa-mountain'
+    icon: 'fa-solid fa-mountain',
+    distance: '15 km',
+    city: 'Aquidauana',
+    state: 'MS',
+    region: 'Serra de Maracaju',
+    bestSeason: 'Maio a setembro',
+    bestSeasonEn: 'May to September',
+    capacity: '50 pessoas',
+    capacityEn: '50 people'
   },
   {
     id: 3,
@@ -128,7 +144,15 @@ export const DESTINATIONS = [
     weatherEn: 'Air-conditioned environment. Year-round visitation.',
     clothing: 'Roupas casuais. Calçados fechados recomendados.',
     clothingEn: 'Casual clothing. Closed shoes recommended.',
-    icon: 'fa-solid fa-building'
+    icon: 'fa-solid fa-building',
+    distance: '0.5 km',
+    city: 'Aquidauana',
+    state: 'MS',
+    region: 'Centro Histórico',
+    bestSeason: 'O ano todo',
+    bestSeasonEn: 'Year round',
+    capacity: '80 pessoas',
+    capacityEn: '80 people'
   },
   {
     id: 4,
@@ -171,7 +195,15 @@ export const DESTINATIONS = [
     weatherEn: 'Best time: May to September (dry season). Avoid heavy rain season.',
     clothing: 'Roupa de banho, tênis de trilha, toalha, protetor solar.',
     clothingEn: 'Swimwear, trail shoes, towel, sunscreen.',
-    icon: 'fa-solid fa-water'
+    icon: 'fa-solid fa-water',
+    distance: '8 km',
+    city: 'Aquidauana',
+    state: 'MS',
+    region: 'Serra de Maracaju',
+    bestSeason: 'Maio a setembro',
+    bestSeasonEn: 'May to September',
+    capacity: '60 pessoas',
+    capacityEn: '60 people'
   },
   {
     id: 5,
@@ -214,7 +246,15 @@ export const DESTINATIONS = [
     weatherEn: 'Outdoor activities. Best time: April to September.',
     clothing: 'Roupas confortáveis, calça comprida para cavalgada, chapéu.',
     clothingEn: 'Comfortable clothes, long pants for horseback riding, hat.',
-    icon: 'fa-solid fa-tractor'
+    icon: 'fa-solid fa-tractor',
+    distance: '25 km',
+    city: 'Aquidauana',
+    state: 'MS',
+    region: 'Zona Rural',
+    bestSeason: 'Abril a setembro',
+    bestSeasonEn: 'April to September',
+    capacity: '40 pessoas',
+    capacityEn: '40 people'
   },
   {
     id: 6,
@@ -257,7 +297,15 @@ export const DESTINATIONS = [
     weatherEn: 'Year-round visitation. Beware of strong sun at midday.',
     clothing: 'Roupas confortáveis, calçados para caminhada, protetor solar.',
     clothingEn: 'Comfortable clothes, walking shoes, sunscreen.',
-    icon: 'fa-solid fa-building'
+    icon: 'fa-solid fa-building',
+    distance: '1 km',
+    city: 'Aquidauana',
+    state: 'MS',
+    region: 'Centro Histórico',
+    bestSeason: 'O ano todo',
+    bestSeasonEn: 'Year round',
+    capacity: '200 pessoas',
+    capacityEn: '200 people'
   },
   {
     id: 7,
@@ -300,7 +348,15 @@ export const DESTINATIONS = [
     weatherEn: 'Air-conditioned environment. Year-round visitation.',
     clothing: 'Casual. Sem restrições de vestimenta.',
     clothingEn: 'Casual. No dress restrictions.',
-    icon: 'fa-solid fa-utensils'
+    icon: 'fa-solid fa-utensils',
+    distance: '0.8 km',
+    city: 'Aquidauana',
+    state: 'MS',
+    region: 'Centro',
+    bestSeason: 'O ano todo',
+    bestSeasonEn: 'Year round',
+    capacity: '50 pessoas',
+    capacityEn: '50 people'
   },
   {
     id: 8,
@@ -343,6 +399,14 @@ export const DESTINATIONS = [
     weatherEn: 'Air conditioning available. Heated pool in winter.',
     clothing: 'Roupas casuais para hospedagem.',
     clothingEn: 'Casual clothes for accommodation.',
-    icon: 'fa-solid fa-bed'
+    icon: 'fa-solid fa-bed',
+    distance: '12 km',
+    city: 'Aquidauana',
+    state: 'MS',
+    region: 'Serra de Maracaju',
+    bestSeason: 'Abril a outubro',
+    bestSeasonEn: 'April to October',
+    capacity: '20 quartos',
+    capacityEn: '20 rooms'
   }
 ];

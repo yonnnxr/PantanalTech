@@ -8,6 +8,7 @@ export default function ConfirmationModal({
 }) {
   const { t } = useLanguage();
 
+  // Verificar se showConfirmation é verdadeiro
   if (!showConfirmation) return null;
 
   return (
@@ -34,7 +35,9 @@ export default function ConfirmationModal({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onCancel();
+                if (onCancel && typeof onCancel === 'function') {
+                  onCancel();
+                }
               }}
               className="px-6 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
             >
@@ -43,7 +46,9 @@ export default function ConfirmationModal({
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onConfirm();
+                if (onConfirm && typeof onConfirm === 'function') {
+                  onConfirm();
+                }
               }}
               className={`px-6 py-2 rounded-lg transition-colors ${
                 pendingAction === 'remove'

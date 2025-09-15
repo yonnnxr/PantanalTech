@@ -28,18 +28,35 @@ export const ModalProvider = ({ children }) => {
       document.body.classList.remove('modal-open');
       document.body.style.top = '';
       if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+        const scrollPosition = parseInt(scrollY.replace('-', ''), 10);
+        if (!isNaN(scrollPosition)) {
+          window.scrollTo(0, scrollPosition);
+        }
       }
     }
 
+    // Cleanup: restaura o scroll se o componente for desmontado
     return () => {
-      // Cleanup: restaura o scroll se o componente for desmontado
       document.body.classList.remove('modal-open');
       document.body.style.top = '';
+      // Restaurar scroll ao desmontar
+      const scrollY = document.body.style.top;
+      if (scrollY) {
+        const scrollPosition = parseInt(scrollY.replace('-', ''), 10);
+        if (!isNaN(scrollPosition)) {
+          window.scrollTo(0, scrollPosition);
+        }
+      }
     };
   }, [activeModals]);
 
   const openModal = (modalId) => {
+    // Verificar se modalId é válido
+    if (!modalId) {
+      console.error('modalId inválido para abrir modal');
+      return;
+    }
+    
     setActiveModals(prev => {
       if (!prev.includes(modalId)) {
         return [...prev, modalId];
@@ -49,10 +66,21 @@ export const ModalProvider = ({ children }) => {
   };
 
   const closeModal = (modalId) => {
+    // Verificar se modalId é válido
+    if (!modalId) {
+      console.error('modalId inválido para fechar modal');
+      return;
+    }
+    
     setActiveModals(prev => prev.filter(id => id !== modalId));
   };
 
   const isModalOpen = (modalId) => {
+    // Verificar se modalId é válido
+    if (!modalId) {
+      return false;
+    }
+    
     return activeModals.includes(modalId);
   };
 

@@ -9,13 +9,17 @@ export function ThemeProvider({ children }) {
   });
 
   useEffect(() => {
-    localStorage.setItem('theme', theme);
-    
-    // Aplicar tema ao documento
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
+    try {
+      localStorage.setItem('theme', theme);
+      
+      // Aplicar tema ao documento
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch (error) {
+      console.error('Erro ao salvar tema no localStorage:', error);
     }
   }, [theme]);
 

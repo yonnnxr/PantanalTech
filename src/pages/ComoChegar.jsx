@@ -15,9 +15,12 @@ export default function ComoChegar() {
   const { language, t } = useLanguage();
 
   useEffect(() => {
+    // Verificar se DESTINATIONS é um array válido
+    const validDestinations = Array.isArray(DESTINATIONS) ? DESTINATIONS : [];
+    
     // Buscar destino pelo ID ou usar o primeiro se não especificado
-    const destId = id ? parseInt(id) : 1;
-    const foundDest = DESTINATIONS.find(d => d.id === destId) || DESTINATIONS[0];
+    const destId = id ? parseInt(id, 10) : 1;
+    const foundDest = validDestinations.find(d => d.id === destId) || validDestinations[0];
     setDestination(foundDest);
     
     // Simular dados de rota (mock)
@@ -41,7 +44,7 @@ export default function ComoChegar() {
     }, 1000);
 
     // Geolocalização
-    if (navigator.geolocation) {
+    if (navigator && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           setUserPos([position.coords.latitude, position.coords.longitude]);
@@ -50,13 +53,19 @@ export default function ComoChegar() {
           setUserPos([-20.463, -55.789]); // Fallback para Aquidauana
         }
       );
+    } else {
+      setUserPos([-20.463, -55.789]); // Fallback para Aquidauana
     }
   }, [id, language, t]);
 
+  // Verificar se destination existe
   if (!destination) return null;
 
   const openInGoogleMaps = () => {
-    const url = `https://www.google.com/maps/dir/${userPos ? `${userPos[0]},${userPos[1]}` : 'Aquidauana,MS'}/${destination.lat},${destination.lon}`;
+    // Verificar se userPos é válido
+    const userPosStr = userPos && Array.isArray(userPos) && userPos.length === 2 ? 
+                      `${userPos[0]},${userPos[1]}` : 'Aquidauana,MS';
+    const url = `https://www.google.com/maps/dir/${userPosStr}/${destination.lat},${destination.lon}`;
     window.open(url, '_blank');
   };
 
@@ -66,15 +75,26 @@ export default function ComoChegar() {
   };
 
   const shareRoute = () => {
-    if (navigator.share) {
+    if (navigator && navigator.share) {
       navigator.share({
         title: `Como chegar: ${destination.name}`,
         text: `Rota para ${destination.name} - Rota Serra e Charme Paxixi`,
         url: window.location.href
       });
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert(t('Link copiado!', 'Link copied!'));
+      if (navigator && navigator.clipboard) {
+        navigator.clipboard.writeText(window.location.href);
+        alert(t('Link copiado!', 'Link copied!'));
+      } else {
+        // Fallback para navegadores que não suportam clipboard API
+        const textArea = document.createElement('textarea');
+        textArea.value = window.location.href;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        alert(t('Link copiado!', 'Link copied!'));
+      }
     }
   };
 
@@ -93,16 +113,20 @@ export default function ComoChegar() {
           <div className="relative h-64">
             <img
               src={heroImage}
-              alt={language === 'pt' ? destination.name : destination.nameEn}
+              alt={language === 'pt' ? (destination.name || '') : (destination.nameEn || '')}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                // Imagem de fallback caso a imagem não carregue
+                e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbSBuw6NvIGRpcG9uw608L3RleHQ+PC9zdmc+';
+              }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
             <div className="absolute bottom-6 left-6 text-white">
               <h2 className="text-3xl font-bold mb-2">
-                {language === 'pt' ? destination.name : destination.nameEn}
+                {language === 'pt' ? (destination.name || '') : (destination.nameEn || '')}
               </h2>
               <p className="text-lg opacity-90">
-                {language === 'pt' ? destination.description : destination.descriptionEn}
+                {language === 'pt' ? (destination.description || '') : (destination.descriptionEn || '')}
               </p>
             </div>
           </div>
@@ -127,11 +151,12 @@ export default function ComoChegar() {
                   destinations={[destination]}
                   className="h-full"
                   routeData={routeData}
+                  userPos={userPos}
                 />
               </div>
 
               {/* Instruções passo a passo */}
-              {!loading && routeData && (
+              {!loading && routeData && Array.isArray(routeData.route) && routeData.route.length > 0 && (
                 <div className="p-6">
                   <h4 className="text-xl font-bold text-gray-800 mb-4">
                     <i className="fa-solid fa-list-ol mr-2 text-blue-600"></i>
@@ -174,14 +199,14 @@ export default function ComoChegar() {
                     <div className="h-4 bg-gray-200 rounded w-1/2"></div>
                   </div>
                 </div>
-              ) : (
+              ) : routeData ? (
                 <div className="space-y-4">
                   <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
                     <div className="flex items-center">
                       <i className="fa-solid fa-road text-blue-600 mr-2"></i>
                       <span className="text-gray-700">{t('Distância', 'Distance')}</span>
                     </div>
-                    <span className="font-bold text-blue-600">{routeData.distance}</span>
+                    <span className="font-bold text-blue-600">{routeData.distance || '0 km'}</span>
                   </div>
                   
                   <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
@@ -189,7 +214,7 @@ export default function ComoChegar() {
                       <i className="fa-solid fa-clock text-green-600 mr-2"></i>
                       <span className="text-gray-700">{t('Tempo', 'Time')}</span>
                     </div>
-                    <span className="font-bold text-green-600">{routeData.duration}</span>
+                    <span className="font-bold text-green-600">{routeData.duration || '0 min'}</span>
                   </div>
                   
                   <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
@@ -197,8 +222,12 @@ export default function ComoChegar() {
                       <i className="fa-solid fa-gas-pump text-orange-600 mr-2"></i>
                       <span className="text-gray-700">{t('Combustível', 'Fuel')}</span>
                     </div>
-                    <span className="font-bold text-orange-600">{routeData.fuelCost}</span>
+                    <span className="font-bold text-orange-600">{routeData.fuelCost || 'R$ 0,00'}</span>
                   </div>
+                </div>
+              ) : (
+                <div className="text-gray-500 text-center py-4">
+                  {t('Dados da rota não disponíveis', 'Route data not available')}
                 </div>
               )}
             </div>
@@ -238,7 +267,7 @@ export default function ComoChegar() {
             </div>
 
             {/* Dicas do trajeto */}
-            {!loading && routeData && (
+            {!loading && routeData && Array.isArray(routeData.tips) && routeData.tips.length > 0 && (
               <div className="bg-white rounded-2xl shadow-lg p-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
                   <i className="fa-solid fa-lightbulb mr-2 text-yellow-600"></i>
@@ -267,18 +296,18 @@ export default function ComoChegar() {
                 <div>
                   <h4 className="font-semibold text-gray-800 mb-2">{t('Horários', 'Schedule')}</h4>
                   <div className="text-sm text-gray-600">
-                    <p>{t('Segunda a Sexta:', 'Monday to Friday:')} {destination.schedule.weekdays}</p>
-                    <p>{t('Fins de Semana:', 'Weekends:')} {destination.schedule.weekends}</p>
+                    <p>{t('Segunda a Sexta:', 'Monday to Friday:')} {destination.schedule?.weekdays || t('Não especificado', 'Not specified')}</p>
+                    <p>{t('Fins de Semana:', 'Weekends:')} {destination.schedule?.weekends || t('Não especificado', 'Not specified')}</p>
                   </div>
                 </div>
                 
                 <div>
                   <h4 className="font-semibold text-gray-800 mb-2">{t('Contato', 'Contact')}</h4>
                   <div className="text-sm text-gray-600 space-y-1">
-                    {destination.contacts.phone && (
+                    {destination.contacts?.phone && (
                       <p><i className="fa-solid fa-phone mr-2"></i>{destination.contacts.phone}</p>
                     )}
-                    {destination.contacts.whatsapp && (
+                    {destination.contacts?.whatsapp && (
                       <p><i className="fab fa-whatsapp mr-2"></i>{destination.contacts.whatsapp}</p>
                     )}
                   </div>
@@ -287,15 +316,15 @@ export default function ComoChegar() {
                 <div>
                   <h4 className="font-semibold text-gray-800 mb-2">{t('Dificuldade', 'Difficulty')}</h4>
                   <span className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
-                    (language === 'pt' ? destination.difficulty : destination.difficultyEn) === 'Fácil' || 
-                    (language === 'pt' ? destination.difficulty : destination.difficultyEn) === 'Easy'
+                    (language === 'pt' ? (destination.difficulty || '') : (destination.difficultyEn || '')) === 'Fácil' || 
+                    (language === 'pt' ? (destination.difficulty || '') : (destination.difficultyEn || '')) === 'Easy'
                       ? 'bg-green-100 text-green-800'
-                      : (language === 'pt' ? destination.difficulty : destination.difficultyEn) === 'Moderada' ||
-                        (language === 'pt' ? destination.difficulty : destination.difficultyEn) === 'Moderate'
+                      : (language === 'pt' ? (destination.difficulty || '') : (destination.difficultyEn || '')) === 'Moderada' ||
+                        (language === 'pt' ? (destination.difficulty || '') : (destination.difficultyEn || '')) === 'Moderate'
                       ? 'bg-yellow-100 text-yellow-800'
                       : 'bg-red-100 text-red-800'
                   }`}>
-                    {language === 'pt' ? destination.difficulty : destination.difficultyEn}
+                    {language === 'pt' ? (destination.difficulty || t('Não especificada', 'Not specified')) : (destination.difficultyEn || t('Not specified', 'Not specified'))}
                   </span>
                 </div>
               </div>

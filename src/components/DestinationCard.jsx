@@ -11,30 +11,52 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
   const { language, t } = useLanguage();
   const { addDestination, removeDestination, selectedDestinations } = useRoute();
 
+  // Verificar se destination existe
+  if (!destination) {
+    return null;
+  }
+
+  // Verificar se destination.images existe e é um array
+  const validImages = Array.isArray(destination.images) ? destination.images : [];
+  
+  // Verificar se currentImageIndex é válido
+  const validCurrentImageIndex = typeof currentImageIndex === 'number' && 
+                                currentImageIndex >= 0 && 
+                                currentImageIndex < validImages.length ? 
+                                currentImageIndex : 0;
+
   const nextImage = (e) => {
     e.stopPropagation();
-    setCurrentImageIndex((prev) => 
-      prev === destination.images.length - 1 ? 0 : prev + 1
-    );
+    if (validImages.length > 0) {
+      const nextIndex = validCurrentImageIndex === validImages.length - 1 ? 0 : validCurrentImageIndex + 1;
+      setCurrentImageIndex(nextIndex);
+    }
   };
 
   const prevImage = (e) => {
     e.stopPropagation();
-    setCurrentImageIndex((prev) => 
-      prev === 0 ? destination.images.length - 1 : prev - 1
-    );
+    if (validImages.length > 0) {
+      const prevIndex = validCurrentImageIndex === 0 ? validImages.length - 1 : validCurrentImageIndex - 1;
+      setCurrentImageIndex(prevIndex);
+    }
   };
 
   const toggleInRoute = (e) => {
     e.stopPropagation();
     if (isInRoute) {
-      removeDestination(destination.id);
+      if (removeDestination && typeof removeDestination === 'function') {
+        removeDestination(destination.id);
+      }
     } else {
-      addDestination(destination);
+      if (addDestination && typeof addDestination === 'function') {
+        addDestination(destination);
+      }
     }
   };
 
-  const isInRoute = selectedDestinations.some(d => d.id === destination.id);
+  // Verificar se selectedDestinations é um array válido
+  const validSelectedDestinations = Array.isArray(selectedDestinations) ? selectedDestinations : [];
+  const isInRoute = validSelectedDestinations.some(d => d.id === destination.id);
 
   const categoryColors = {
     'Trilhas e ecoturismo': 'bg-green-100 text-green-800',
@@ -52,11 +74,13 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
     'Easy': 'text-green-600',
     'Moderada': 'text-yellow-600',
     'Moderate': 'text-yellow-600',
+    'Difícil': 'text-red-600',
     'Hard': 'text-red-600',
   };
 
-  const schedule = language === 'pt' ? destination.schedule : destination.scheduleEn;
-  const difficulty = language === 'pt' ? destination.difficulty : destination.difficultyEn;
+  // Verificar se schedule existe
+  const schedule = destination.schedule || destination.scheduleEn || {};
+  const difficulty = language === 'pt' ? (destination.difficulty || '') : (destination.difficultyEn || '');
 
   return (
     <div
@@ -67,20 +91,32 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
       onClick={() => {
         if (!isModalOpen) {
           setIsModalOpen(true);
-          onSelect && onSelect(destination);
+          if (onSelect && typeof onSelect === 'function') {
+            onSelect(destination);
+          }
         }
       }}
     >
       {/* Galeria de imagens */}
       <div className="relative h-48 overflow-hidden">
-        <img
-          src={destination.images[currentImageIndex]}
-          alt={language === 'pt' ? destination.name : destination.nameEn}
-          className="w-full h-full object-cover"
-        />
+        {validImages.length > 0 ? (
+          <img
+            src={validImages[validCurrentImageIndex]}
+            alt={language === 'pt' ? (destination.name || '') : (destination.nameEn || '')}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // Imagem de fallback caso a imagem não carregue
+              e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkltYWdlbSBuw6NvIGRpcG9uw608L3RleHQ+PC9zdmc+';
+            }}
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+            <i className="fa-solid fa-image text-4xl text-gray-400"></i>
+          </div>
+        )}
         
         {/* Navegação da galeria */}
-        {destination.images.length > 1 && (
+        {validImages.length > 1 && (
           <>
             <button
               onClick={prevImage}
@@ -97,11 +133,11 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
               →
             </button>
             <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
-              {destination.images.map((_, index) => (
+              {validImages.map((_, index) => (
                 <div
                   key={index}
                   className={`w-2 h-2 rounded-full ${
-                    index === currentImageIndex ? 'bg-white' : 'bg-white bg-opacity-50'
+                    index === validCurrentImageIndex ? 'bg-white' : 'bg-white bg-opacity-50'
                   }`}
                 />
               ))}
@@ -111,8 +147,11 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
 
         {/* Categoria e botão de rota */}
         <div className="absolute top-3 left-3">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${categoryColors[destination.category]}`}>
-            <i className={`${destination.icon} mr-1`}></i> {language === 'pt' ? destination.category : destination.categoryEn}
+          <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+            categoryColors[language === 'pt' ? (destination.category || '') : (destination.categoryEn || '')] || 'bg-gray-100 text-gray-800'
+          }`}>
+            <i className={`${destination.icon || 'fa-solid fa-location-dot'} mr-1`}></i> 
+            {language === 'pt' ? (destination.category || '') : (destination.categoryEn || '')}
           </span>
         </div>
         
@@ -129,6 +168,10 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
               ? t('Remover da rota', 'Remove from route') 
               : t('Adicionar à rota', 'Add to route')
             }
+            aria-label={isInRoute 
+              ? t('Remover da rota', 'Remove from route') 
+              : t('Adicionar à rota', 'Add to route')
+            }
           >
             {isInRoute ? '✕' : '+'}
           </button>
@@ -138,11 +181,11 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
       {/* Conteúdo do card */}
       <div className="p-4">
         <h3 className="text-lg font-bold text-gray-800 mb-2">
-          {language === 'pt' ? destination.name : destination.nameEn}
+          {language === 'pt' ? (destination.name || '') : (destination.nameEn || '')}
         </h3>
         
         <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-          {language === 'pt' ? destination.description : destination.descriptionEn}
+          {language === 'pt' ? (destination.description || '') : (destination.descriptionEn || '')}
         </p>
 
         {/* Informações básicas */}
@@ -150,11 +193,11 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
           <div>
             <span className="font-medium">{t('Duração:', 'Duration:')}</span>
             <br />
-            {language === 'pt' ? destination.duration : destination.durationEn}
+            {language === 'pt' ? (destination.duration || '') : (destination.durationEn || '')}
           </div>
           <div>
-            <span className={`font-medium ${difficultyColors[difficulty]}`}>
-              ● {difficulty}
+            <span className={`font-medium ${difficultyColors[difficulty] || 'text-gray-500'}`}>
+              ● {difficulty || t('Não especificada', 'Not specified')}
             </span>
           </div>
         </div>
@@ -162,25 +205,33 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
         {/* Horários */}
         <div className="text-xs text-gray-500 mb-3">
           <span className="font-medium">{t('Horários:', 'Schedule:')}</span>
-          <div>{schedule.weekdays}</div>
-          {schedule.closed !== 'Nunca fechado' && schedule.closed !== 'Never closed' && (
+          <div>{schedule.weekdays || t('Não especificado', 'Not specified')}</div>
+          {schedule.closed && schedule.closed !== 'Nunca fechado' && schedule.closed !== 'Never closed' && (
             <div className="text-red-600">{schedule.closed}</div>
           )}
         </div>
 
         {/* Destaques */}
         <div className="flex flex-wrap gap-1 mb-3">
-          {(language === 'pt' ? destination.highlights : destination.highlightsEn).slice(0, 3).map((highlight, idx) => (
-            <span
-              key={idx}
-              className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
-            >
-              {highlight}
-            </span>
-          ))}
-          {(language === 'pt' ? destination.highlights : destination.highlightsEn).length > 3 && (
+          {Array.isArray(destination.highlights) && destination.highlights.length > 0 ? (
+            <>
+              {destination.highlights.slice(0, 3).map((highlight, idx) => (
+                <span
+                  key={idx}
+                  className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                >
+                  {highlight}
+                </span>
+              ))}
+              {destination.highlights.length > 3 && (
+                <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                  +{destination.highlights.length - 3}
+                </span>
+              )}
+            </>
+          ) : (
             <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-              +{(language === 'pt' ? destination.highlights : destination.highlightsEn).length - 3}
+              {t('Sem destaques', 'No highlights')}
             </span>
           )}
         </div>
@@ -198,7 +249,7 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
           </button>
           
           <div className="flex items-center gap-2">
-            {destination.contacts.phone && (
+            {destination.contacts && destination.contacts.phone && (
               <a
                 href={`tel:${destination.contacts.phone}`}
                 onClick={(e) => e.stopPropagation()}
@@ -209,7 +260,7 @@ export default function DestinationCard({ destination, onSelect, isSelected }) {
               </a>
             )}
             
-            {destination.contacts.whatsapp && (
+            {destination.contacts && destination.contacts.whatsapp && (
               <a
                 href={`https://wa.me/55${destination.contacts.whatsapp}`}
                 target="_blank"

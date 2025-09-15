@@ -4,8 +4,17 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 export default function AccessibilityPanel() {
   const [isOpen, setIsOpen] = useState(false);
-  const { fontSize, highContrast, increaseFontSize, decreaseFontSize, toggleHighContrast } = useAccessibility();
+  const accessibility = useAccessibility();
   const { t } = useLanguage();
+
+  // Verificar se as funções de acessibilidade existem
+  const {
+    fontSize = 'normal',
+    highContrast = false,
+    increaseFontSize,
+    decreaseFontSize,
+    toggleHighContrast
+  } = accessibility || {};
 
   return (
     <>
@@ -32,9 +41,14 @@ export default function AccessibilityPanel() {
             </label>
             <div className="flex gap-2">
               <button
-                onClick={decreaseFontSize}
+                onClick={() => {
+                  if (decreaseFontSize && typeof decreaseFontSize === 'function') {
+                    decreaseFontSize();
+                  }
+                }}
                 className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm"
                 disabled={fontSize === 'normal'}
+                aria-label={t('Diminuir tamanho da fonte', 'Decrease font size')}
               >
                 A-
               </button>
@@ -44,9 +58,14 @@ export default function AccessibilityPanel() {
                 {fontSize === 'extra-large' && 'A++'}
               </span>
               <button
-                onClick={increaseFontSize}
+                onClick={() => {
+                  if (increaseFontSize && typeof increaseFontSize === 'function') {
+                    increaseFontSize();
+                  }
+                }}
                 className="px-3 py-1 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 text-sm"
                 disabled={fontSize === 'extra-large'}
+                aria-label={t('Aumentar tamanho da fonte', 'Increase font size')}
               >
                 A+
               </button>
@@ -59,7 +78,11 @@ export default function AccessibilityPanel() {
               <input
                 type="checkbox"
                 checked={highContrast}
-                onChange={toggleHighContrast}
+                onChange={() => {
+                  if (toggleHighContrast && typeof toggleHighContrast === 'function') {
+                    toggleHighContrast();
+                  }
+                }}
                 className="mr-2"
               />
               <span className="text-sm text-gray-700">

@@ -18,7 +18,10 @@ const difficultyColors = {
 };
 
 export default function DestinationList({ destinations, onSelect, selectedId }) {
-  if (!destinations || destinations.length === 0) {
+  // Verificar se destinations é um array válido
+  const validDestinations = Array.isArray(destinations) ? destinations : [];
+
+  if (validDestinations.length === 0) {
     return (
       <div className="p-4 text-center text-gray-500">
         Nenhum destino encontrado
@@ -28,50 +31,73 @@ export default function DestinationList({ destinations, onSelect, selectedId }) 
 
   return (
     <div className="space-y-2 p-4">
-      {destinations.map((dest) => (
-        <div
-          key={dest.id}
-          className={`p-4 cursor-pointer rounded-lg border transition-all ${
-            dest.id === selectedId 
-              ? 'bg-blue-50 border-blue-300 shadow-md' 
-              : 'bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300'
-          }`}
-          style={{ zIndex: 0 }}
-          onClick={() => onSelect(dest)}
-        >
-          <div className="flex items-start justify-between mb-2">
-            <h3 className="font-semibold text-gray-800">{dest.name}</h3>
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${categoryColors[dest.category] || categoryColors['default']}`}>
-              {dest.category}
-            </span>
-          </div>
-          
-          <p className="text-sm text-gray-600 mb-3 line-clamp-2">
-            {dest.description}
-          </p>
-          
-          <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
-            <span className={difficultyColors[dest.difficulty]}>● {dest.difficulty}</span>
-            <span>⏱️ {dest.duration}</span>
-          </div>
-          
-          <div className="flex flex-wrap gap-1">
-            {dest.highlights.slice(0, 2).map((highlight, idx) => (
-              <span
-                key={idx}
-                className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
-              >
-                {highlight}
+      {validDestinations.map((dest) => {
+        // Verificar se o destino tem um ID válido
+        if (!dest || !dest.id) {
+          return null;
+        }
+        
+        return (
+          <div
+            key={dest.id}
+            className={`p-4 cursor-pointer rounded-lg border transition-all ${
+              dest.id === selectedId 
+                ? 'bg-blue-50 border-blue-300 shadow-md' 
+                : 'bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+            }`}
+            style={{ zIndex: 0 }}
+            onClick={() => {
+              if (onSelect && typeof onSelect === 'function') {
+                onSelect(dest);
+              }
+            }}
+          >
+            <div className="flex items-start justify-between mb-2">
+              <h3 className="font-semibold text-gray-800">{dest.name || 'Destino sem nome'}</h3>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                categoryColors[dest.category] || categoryColors['default']
+              }`}>
+                {dest.category || 'Sem categoria'}
               </span>
-            ))}
-            {dest.highlights.length > 2 && (
-              <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
-                +{dest.highlights.length - 2}
+            </div>
+            
+            <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+              {dest.description || 'Sem descrição'}
+            </p>
+            
+            <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
+              <span className={difficultyColors[dest.difficulty] || 'text-gray-500'}>
+                ● {dest.difficulty || 'Não especificada'}
               </span>
-            )}
+              <span>⏱️ {dest.duration || 'Não especificada'}</span>
+            </div>
+            
+            <div className="flex flex-wrap gap-1">
+              {Array.isArray(dest.highlights) && dest.highlights.length > 0 ? (
+                <>
+                  {dest.highlights.slice(0, 2).map((highlight, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
+                    >
+                      {highlight}
+                    </span>
+                  ))}
+                  {dest.highlights.length > 2 && (
+                    <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                      +{dest.highlights.length - 2}
+                    </span>
+                  )}
+                </>
+              ) : (
+                <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                  Sem destaques
+                </span>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

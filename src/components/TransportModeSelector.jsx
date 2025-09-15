@@ -18,7 +18,11 @@ export default function TransportModeSelector({ selectedMode, onModeChange }) {
         {TRANSPORT_MODES.map((mode) => (
           <button
             key={mode.id}
-            onClick={() => onModeChange(mode.id)}
+            onClick={() => {
+              if (onModeChange && typeof onModeChange === 'function') {
+                onModeChange(mode.id);
+              }
+            }}
             className={`flex flex-col items-center p-3 rounded-lg border-2 transition-all ${
               selectedMode === mode.id
                 ? 'border-blue-500 bg-blue-50 text-blue-700'

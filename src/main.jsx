@@ -4,8 +4,14 @@ import App from './App';
 import '@fortawesome/fontawesome-free/css/all.css';
 import './index.css';
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-);
+// Verificar se o elemento root existe
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  console.error('Elemento root não encontrado no DOM');
+} else {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>,
+  );
+}

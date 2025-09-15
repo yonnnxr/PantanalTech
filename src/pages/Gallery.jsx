@@ -13,7 +13,11 @@ const CategoryFilters = ({ categories, activeCategory, onCategoryChange }) => {
           {categories.map((category) => (
             <button
               key={category.id}
-              onClick={() => onCategoryChange(category.id)}
+              onClick={() => {
+                if (onCategoryChange && typeof onCategoryChange === 'function') {
+                  onCategoryChange(category.id);
+                }
+              }}
               className={`flex items-center space-x-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full font-medium transition-all duration-300 text-sm sm:text-base ${
                 activeCategory === category.id
                   ? 'bg-blue-600 text-white shadow-lg'
@@ -37,10 +41,10 @@ const MainGallery = ({ images, activeCategory, categoryName, imageCount }) => {
     <ContentSection>
       <div className="text-center mb-8 sm:mb-12">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2 sm:mb-4">
-          {categoryName}
+          {categoryName || 'Galeria'}
         </h2>
         <p className="text-gray-600 text-sm sm:text-base">
-          {imageCount}
+          {imageCount || '0 imagens'}
         </p>
       </div>
 
@@ -74,13 +78,19 @@ const CategorySection = ({ categories, onCategoryChange, imageCounts }) => {
           <div 
             key={category.id}
             className="group cursor-pointer"
-            onClick={() => onCategoryChange(category.id)}
+            onClick={() => {
+              if (onCategoryChange && typeof onCategoryChange === 'function') {
+                onCategoryChange(category.id);
+              }
+            }}
             role="button"
             tabIndex={0}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                onCategoryChange(category.id);
+                if (onCategoryChange && typeof onCategoryChange === 'function') {
+                  onCategoryChange(category.id);
+                }
               }
             }}
             aria-label={`Ver imagens da categoria ${category.name}`}
@@ -91,7 +101,7 @@ const CategorySection = ({ categories, onCategoryChange, imageCounts }) => {
               </div>
               <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">{category.name}</h3>
               <p className="text-gray-600 text-xs sm:text-sm">
-                {imageCounts[category.id]}
+                {imageCounts[category.id] || '0 imagens'}
               </p>
             </div>
           </div>
@@ -105,6 +115,9 @@ export default function Gallery() {
   const { t } = useLanguage();
   const [activeCategory, setActiveCategory] = useState('all');
 
+  // Verificar se GALLERY_IMAGES existe e é um objeto válido
+  const validGalleryImages = GALLERY_IMAGES && typeof GALLERY_IMAGES === 'object' ? GALLERY_IMAGES : {};
+
   // Memoização das categorias para evitar re-renderizações desnecessárias
   const categories = useMemo(() => [
     { id: 'all', name: t('Todas', 'All'), icon: 'fa-solid fa-images' },
@@ -117,23 +130,25 @@ export default function Gallery() {
   // Memoização das imagens filtradas
   const filteredImages = useMemo(() => {
     if (activeCategory === 'all') {
-          return Object.values(GALLERY_IMAGES).flat();
-  }
-  return GALLERY_IMAGES[activeCategory] || [];
-  }, [activeCategory]);
+      return Object.values(validGalleryImages).flat();
+    }
+    return validGalleryImages[activeCategory] || [];
+  }, [activeCategory, validGalleryImages]);
 
   // Memoização das contagens de imagens por categoria
   const imageCounts = useMemo(() => {
     const counts = {};
     categories.forEach(category => {
       if (category.id === 'all') {
-              counts[category.id] = t(`${Object.values(GALLERY_IMAGES).flat().length} imagens encontradas`, `${Object.values(GALLERY_IMAGES).flat().length} images found`);
-    } else {
-      counts[category.id] = t(`${GALLERY_IMAGES[category.id]?.length || 0} imagens`, `${GALLERY_IMAGES[category.id]?.length || 0} images`);
+        const totalImages = Object.values(validGalleryImages).flat().length;
+        counts[category.id] = t(`${totalImages} imagens encontradas`, `${totalImages} images found`);
+      } else {
+        const categoryCount = validGalleryImages[category.id] ? validGalleryImages[category.id].length : 0;
+        counts[category.id] = t(`${categoryCount} imagens`, `${categoryCount} images`);
       }
     });
     return counts;
-  }, [categories, t]);
+  }, [categories, t, validGalleryImages]);
 
   // Callback para mudança de categoria
   const handleCategoryChange = useCallback((categoryId) => {

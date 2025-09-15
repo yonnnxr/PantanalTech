@@ -3,14 +3,20 @@ import { useLanguage } from '../contexts/LanguageContext';
 export default function ModalTabContent({ activeTab, destination }) {
   const { language, t } = useLanguage();
 
-  const schedule = language === 'pt' ? destination.schedule : destination.scheduleEn;
-  const difficulty = language === 'pt' ? destination.difficulty : destination.difficultyEn;
+  // Verificar se destination existe
+  if (!destination) {
+    return null;
+  }
+
+  // Verificar se schedule existe
+  const schedule = language === 'pt' ? (destination.schedule || '') : (destination.scheduleEn || '');
+  const difficulty = language === 'pt' ? (destination.difficulty || '') : (destination.difficultyEn || '');
 
   if (activeTab === 'info') {
     return (
       <div className="space-y-6">
         <p className="text-gray-700 leading-relaxed">
-          {language === 'pt' ? destination.fullDescription : destination.fullDescriptionEn}
+          {language === 'pt' ? (destination.fullDescription || '') : (destination.fullDescriptionEn || '')}
         </p>
         
         <div className="grid md:grid-cols-2 gap-6">
@@ -22,15 +28,15 @@ export default function ModalTabContent({ activeTab, destination }) {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">{t('Duração:', 'Duration:')}</span>
-                <span className="font-medium">{destination.duration}</span>
+                <span className="font-medium">{destination.duration || t('Não especificada', 'Not specified')}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">{t('Dificuldade:', 'Difficulty:')}</span>
-                <span className="font-medium">{difficulty}</span>
+                <span className="font-medium">{difficulty || t('Não especificada', 'Not specified')}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">{t('Distância:', 'Distance:')}</span>
-                <span className="font-medium">{destination.distance}</span>
+                <span className="font-medium">{destination.distance || t('Não especificada', 'Not specified')}</span>
               </div>
             </div>
           </div>
@@ -43,15 +49,15 @@ export default function ModalTabContent({ activeTab, destination }) {
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">{t('Cidade:', 'City:')}</span>
-                <span className="font-medium">{destination.city}</span>
+                <span className="font-medium">{destination.city || t('Não especificada', 'Not specified')}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">{t('Estado:', 'State:')}</span>
-                <span className="font-medium">{destination.state}</span>
+                <span className="font-medium">{destination.state || t('Não especificado', 'Not specified')}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">{t('Região:', 'Region:')}</span>
-                <span className="font-medium">{destination.region}</span>
+                <span className="font-medium">{destination.region || t('Não especificada', 'Not specified')}</span>
               </div>
             </div>
           </div>
@@ -69,7 +75,7 @@ export default function ModalTabContent({ activeTab, destination }) {
             {t('Horário de Funcionamento', 'Opening Hours')}
           </h4>
           <p className="text-sm text-gray-700">
-            {schedule}
+            {schedule || t('Não especificado', 'Not specified')}
           </p>
         </div>
         
@@ -79,7 +85,7 @@ export default function ModalTabContent({ activeTab, destination }) {
             {t('Melhor Época', 'Best Season')}
           </h4>
           <p className="text-sm text-gray-700">
-            {language === 'pt' ? destination.bestSeason : destination.bestSeasonEn}
+            {language === 'pt' ? (destination.bestSeason || '') : (destination.bestSeasonEn || '')}
           </p>
         </div>
         
@@ -89,7 +95,7 @@ export default function ModalTabContent({ activeTab, destination }) {
             {t('Capacidade', 'Capacity')}
           </h4>
           <p className="text-sm text-gray-700">
-            {language === 'pt' ? destination.capacity : destination.capacityEn}
+            {language === 'pt' ? (destination.capacity || '') : (destination.capacityEn || '')}
           </p>
         </div>
       </div>
@@ -106,27 +112,27 @@ export default function ModalTabContent({ activeTab, destination }) {
               {t('Contato', 'Contact')}
             </h4>
             <div className="space-y-2 text-sm">
-              {destination.phone && (
+              {destination.contacts && destination.contacts.phone && (
                 <div className="flex items-center">
                   <span className="text-gray-600 w-20">{t('Telefone:', 'Phone:')}</span>
-                  <a href={`tel:${destination.phone}`} className="text-blue-600 hover:underline">
-                    {destination.phone}
+                  <a href={`tel:${destination.contacts.phone}`} className="text-blue-600 hover:underline">
+                    {destination.contacts.phone}
                   </a>
                 </div>
               )}
-              {destination.email && (
+              {destination.contacts && destination.contacts.email && (
                 <div className="flex items-center">
                   <span className="text-gray-600 w-20">{t('Email:', 'Email:')}</span>
-                  <a href={`mailto:${destination.email}`} className="text-blue-600 hover:underline">
-                    {destination.email}
+                  <a href={`mailto:${destination.contacts.email}`} className="text-blue-600 hover:underline">
+                    {destination.contacts.email}
                   </a>
                 </div>
               )}
-              {destination.website && (
+              {destination.contacts && destination.contacts.website && (
                 <div className="flex items-center">
                   <span className="text-gray-600 w-20">{t('Website:', 'Website:')}</span>
-                  <a href={destination.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                    {destination.website}
+                  <a href={destination.contacts.website} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                    {destination.contacts.website}
                   </a>
                 </div>
               )}
@@ -139,7 +145,7 @@ export default function ModalTabContent({ activeTab, destination }) {
               {t('Endereço', 'Address')}
             </h4>
             <p className="text-sm text-gray-700">
-              {language === 'pt' ? destination.address : destination.addressEn}
+              {language === 'pt' ? (destination.address || '') : (destination.addressEn || '')}
             </p>
           </div>
         </div>
@@ -156,7 +162,7 @@ export default function ModalTabContent({ activeTab, destination }) {
             {t('Dicas de Visitação', 'Visiting Tips')}
           </h4>
           <p className="text-sm text-gray-700">
-            {language === 'pt' ? destination.tips : destination.tipsEn}
+            {language === 'pt' ? (destination.tips || '') : (destination.tipsEn || '')}
           </p>
         </div>
         
@@ -166,7 +172,7 @@ export default function ModalTabContent({ activeTab, destination }) {
             {t('Clima e Época', 'Weather & Season')}
           </h4>
           <p className="text-sm text-gray-700">
-            {language === 'pt' ? destination.weather : destination.weatherEn}
+            {language === 'pt' ? (destination.weather || '') : (destination.weatherEn || '')}
           </p>
         </div>
         
@@ -176,7 +182,7 @@ export default function ModalTabContent({ activeTab, destination }) {
             {t('O que Vestir', 'What to Wear')}
           </h4>
           <p className="text-sm text-gray-700">
-            {language === 'pt' ? destination.clothing : destination.clothingEn}
+            {language === 'pt' ? (destination.clothing || '') : (destination.clothingEn || '')}
           </p>
         </div>
       </div>

@@ -17,13 +17,26 @@ export const RouteProvider = ({ children }) => {
   const [multiRouteData, setMultiRouteData] = useState(null);
 
   const addDestination = (destination) => {
+    // Verificar se destination é válido
+    if (!destination || !destination.id) {
+      console.error('Destination inválida para adicionar à rota');
+      return;
+    }
+    
+    // Verificar se o destino já está na lista
     if (!selectedDestinations.find(d => d.id === destination.id)) {
-      setSelectedDestinations([...selectedDestinations, destination]);
+      setSelectedDestinations(prev => [...prev, destination]);
     }
   };
 
   const removeDestination = (destinationId) => {
-    setSelectedDestinations(selectedDestinations.filter(d => d.id !== destinationId));
+    // Verificar se destinationId é válido
+    if (destinationId === undefined || destinationId === null) {
+      console.error('ID de destino inválido para remover da rota');
+      return;
+    }
+    
+    setSelectedDestinations(prev => prev.filter(d => d.id !== destinationId));
   };
 
   const clearDestinations = () => {
@@ -32,6 +45,12 @@ export const RouteProvider = ({ children }) => {
   };
 
   const reorderDestinations = (newOrder) => {
+    // Verificar se newOrder é um array válido
+    if (!Array.isArray(newOrder)) {
+      console.error('Nova ordem de destinos inválida');
+      return;
+    }
+    
     setSelectedDestinations(newOrder);
   };
 

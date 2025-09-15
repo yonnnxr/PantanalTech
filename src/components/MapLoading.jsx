@@ -3,6 +3,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 export default function MapLoading({ isMapLoading }) {
   const { t } = useLanguage();
 
+  // Verificar se isMapLoading é verdadeiro
   if (!isMapLoading) return null;
 
   return (

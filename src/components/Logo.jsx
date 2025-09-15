@@ -18,6 +18,9 @@ export default function Logo({
     huge: "h-24 w-24 sm:h-32 sm:w-32"
   };
 
+  // Verificar se size é válido
+  const validSize = sizeClasses[size] ? size : "medium";
+
   return (
     <Link 
       to={linkTo} 
@@ -26,8 +29,12 @@ export default function Logo({
       <img 
         src={logoImage} 
         alt="Rota Serra e Charme Paxixi Logo" 
-        className={`${sizeClasses[size]} object-contain flex-shrink-0`}
+        className={`${sizeClasses[validSize]} object-contain flex-shrink-0`}
         style={{ minWidth: 'auto', minHeight: 'auto' }}
+        onError={(e) => {
+          // Imagem de fallback caso a logo não carregue
+          e.target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZGRkIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPmxvZ288L3RleHQ+PC9zdmc+';
+        }}
       />
     </Link>
   );

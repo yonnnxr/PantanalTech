@@ -51,23 +51,28 @@ import gallerySerra2 from '../assets/images/gallery/serra/Serra_de_Maracaju_-_Va
 import gallerySerra3 from '../assets/images/gallery/serra/Serra_de_Maracaju.jpg';
 import gallerySerra4 from '../assets/images/gallery/serra/Serra-de-Maracaju-Aquidauana-MS-1024x576.webp';
 
+// Verificar se as imagens foram importadas corretamente
+const validateImage = (image, fallback) => {
+  return image && typeof image === 'string' ? image : fallback;
+};
+
 // Exportar imagens organizadas por destino
 export const DESTINATION_IMAGES = {
-  paxixi: [paxixi1, paxixi2, paxixi3],
-  serra: [serra1, serra2, serra3],
-  museu: [museu1, museu2, museu3],
-  cachoeira: [cachoeira1, cachoeira2, cachoeira3],
-  fazenda: [fazenda1, fazenda2, fazenda3],
-  centro: [centro1, centro2, centro3],
-  restaurante: [restaurante1, restaurante2, restaurante3]
+  paxixi: [paxixi1, paxixi2, paxixi3].filter(img => img),
+  serra: [serra1, serra2, serra3].filter(img => img),
+  museu: [museu1, museu2, museu3].filter(img => img),
+  cachoeira: [cachoeira1, cachoeira2, cachoeira3].filter(img => img),
+  fazenda: [fazenda1, fazenda2, fazenda3].filter(img => img),
+  centro: [centro1, centro2, centro3].filter(img => img),
+  restaurante: [restaurante1, restaurante2, restaurante3].filter(img => img)
 };
 
 // Exportar imagens da galeria
 export const GALLERY_IMAGES = {
-  pantanal: [galleryPantanal1, galleryPantanal2, galleryPantanal3, galleryPantanal4],
-  fauna: [galleryFauna1, galleryFauna2, galleryFauna3, galleryFauna4],
-  flora: [galleryFlora1, galleryFlora2, galleryFlora3, galleryFlora4],
-  serra: [gallerySerra1, gallerySerra2, gallerySerra3, gallerySerra4]
+  pantanal: [galleryPantanal1, galleryPantanal2, galleryPantanal3, galleryPantanal4].filter(img => img),
+  fauna: [galleryFauna1, galleryFauna2, galleryFauna3, galleryFauna4].filter(img => img),
+  flora: [galleryFlora1, galleryFlora2, galleryFlora3, galleryFlora4].filter(img => img),
+  serra: [gallerySerra1, gallerySerra2, gallerySerra3, gallerySerra4].filter(img => img)
 };
 
 // Exportar imagem hero
@@ -79,12 +84,22 @@ export const getRandomHeroImage = () => {
     heroImage,
     galleryPantanal1,
     gallerySerra1
-  ];
+  ].filter(img => img);
+  
+  if (heroImages.length === 0) {
+    return null;
+  }
+  
   return heroImages[Math.floor(Math.random() * heroImages.length)];
 };
 
 // Função para obter imagens de um destino específico
 export const getDestinationImages = (destinationId) => {
+  // Verificar se destinationId é um número válido
+  if (typeof destinationId !== 'number' || destinationId < 1 || destinationId > 8) {
+    return [];
+  }
+  
   const imageMap = {
     1: DESTINATION_IMAGES.paxixi,
     2: DESTINATION_IMAGES.serra,
@@ -96,5 +111,7 @@ export const getDestinationImages = (destinationId) => {
     8: DESTINATION_IMAGES.fazenda // Pousada usa as mesmas imagens da fazenda
   };
   
-  return imageMap[destinationId] || [];
+  // Verificar se o array de imagens existe e não está vazio
+  const images = imageMap[destinationId];
+  return Array.isArray(images) ? images : [];
 }; 

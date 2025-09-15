@@ -36,15 +36,22 @@ export const HeroSection = ({
   backgroundClass = "bg-gradient-to-r from-blue-600 to-teal-500",
   className = ""
 }) => {
+  // Verificar se title existe
+  if (!title) {
+    return null;
+  }
+  
   return (
     <section className={`py-12 sm:py-16 ${backgroundClass} text-white ${className}`} role="banner">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 text-center">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6">
           {title}
         </h1>
-        <p className="text-lg sm:text-xl max-w-3xl mx-auto">
-          {subtitle}
-        </p>
+        {subtitle && (
+          <p className="text-lg sm:text-xl max-w-3xl mx-auto">
+            {subtitle}
+          </p>
+        )}
       </div>
     </section>
   );

@@ -5,8 +5,18 @@ export default function ShareButton({ destination, className = "" }) {
   const [showOptions, setShowOptions] = useState(false);
   const { t } = useLanguage();
 
-  const shareUrl = `${window.location.origin}/?destination=${destination.id}`;
-  const shareText = `Confira este destino incrível: ${destination.name}`;
+  // Verificar se destination existe
+  if (!destination || !destination.id) {
+    return null;
+  }
+
+  // Verificar se window está disponível (ambiente de navegador)
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  const shareUrl = `${window.location.origin}/?destination=${encodeURIComponent(destination.id)}`;
+  const shareText = `Confira este destino incrível: ${destination.name || 'Destino turístico'}`;
 
   const shareOptions = [
     {
@@ -37,8 +47,20 @@ export default function ShareButton({ destination, className = "" }) {
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(shareUrl);
-      alert(t('Link copiado!', 'Link copied!'));
+      if (navigator && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        await navigator.clipboard.writeText(shareUrl);
+        // Usar uma notificação mais amigável em vez de alert
+        console.log(t('Link copiado!', 'Link copied!'));
+      } else {
+        // Fallback para ambientes que não suportam clipboard API
+        const textArea = document.createElement('textarea');
+        textArea.value = shareUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        console.log(t('Link copiado!', 'Link copied!'));
+      }
     } catch (err) {
       console.error('Erro ao copiar:', err);
     }
@@ -50,12 +72,17 @@ export default function ShareButton({ destination, className = "" }) {
         onClick={() => setShowOptions(!showOptions)}
         className="p-2 rounded-full text-gray-400 hover:text-blue-500 transition-colors"
         title={t('Compartilhar', 'Share')}
+        aria-label={t('Compartilhar', 'Share')}
       >
         <i className="fa-solid fa-share-alt"></i>
       </button>
 
       {showOptions && (
-        <div className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border p-2 z-[10001] min-w-[200px]">
+        <div 
+          className="absolute right-0 top-full mt-2 bg-white rounded-lg shadow-lg border p-2 z-[10001] min-w-[200px]"
+          role="menu"
+          aria-label={t('Opções de compartilhamento', 'Share options')}
+        >
           <div className="text-sm font-medium text-gray-800 mb-2 px-2">
             {t('Compartilhar', 'Share')}
           </div>
@@ -68,6 +95,7 @@ export default function ShareButton({ destination, className = "" }) {
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded text-sm transition-colors"
               onClick={() => setShowOptions(false)}
+              role="menuitem"
             >
               <i className={`${option.icon} ${option.color}`}></i>
               {option.name}
@@ -80,6 +108,7 @@ export default function ShareButton({ destination, className = "" }) {
               setShowOptions(false);
             }}
             className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded text-sm transition-colors w-full text-left"
+            role="menuitem"
           >
             <i className="fa-solid fa-copy text-gray-600"></i>
             {t('Copiar link', 'Copy link')}

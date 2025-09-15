@@ -20,11 +20,8 @@ export default function DestinationModal({ destination, isOpen, onClose }) {
 
   // Verificar se destination existe
   if (!destination) {
-    console.error('DestinationModal: destination é null ou undefined');
     return null;
   }
-
-  console.log('DestinationModal renderizando:', destination.name, 'isOpen:', isOpen);
 
   const modalId = `destination-${destination.id}`;
 
@@ -36,17 +33,21 @@ export default function DestinationModal({ destination, isOpen, onClose }) {
       setShowConfirmation(false);
       setPendingAction(null);
       // Só abrir modal se não estiver já aberto
-      if (!isModalOpen(modalId)) {
+      if (openModal && typeof openModal === 'function' && !isModalOpen(modalId)) {
         openModal(modalId);
       }
     } else {
-      closeModal(modalId);
+      if (closeModal && typeof closeModal === 'function') {
+        closeModal(modalId);
+      }
     }
   }, [isOpen, modalId]);
 
   if (!isOpen || !destination) return null;
 
-  const isInRoute = selectedDestinations.some(d => d.id === destination.id);
+  // Verificar se selectedDestinations é um array válido
+  const validSelectedDestinations = Array.isArray(selectedDestinations) ? selectedDestinations : [];
+  const isInRoute = validSelectedDestinations.some(d => d.id === destination.id);
 
   const handleClose = () => {
     // Se há uma ação pendente, mostra confirmação
@@ -63,17 +64,23 @@ export default function DestinationModal({ destination, isOpen, onClose }) {
     }
     
     // Fecha o modal e limpa o estado
-    closeModal(modalId);
-    onClose();
+    if (closeModal && typeof closeModal === 'function') {
+      closeModal(modalId);
+    }
+    if (onClose && typeof onClose === 'function') {
+      onClose();
+    }
   };
 
   const handleConfirmAction = () => {
-    if (pendingAction === 'remove') {
+    if (pendingAction === 'remove' && removeDestination && typeof removeDestination === 'function') {
       removeDestination(destination.id);
     }
     setShowConfirmation(false);
     setPendingAction(null);
-    onClose();
+    if (onClose && typeof onClose === 'function') {
+      onClose();
+    }
   };
 
   const handleCancelAction = () => {
@@ -81,37 +88,34 @@ export default function DestinationModal({ destination, isOpen, onClose }) {
     setPendingAction(null);
   };
 
-  const toggleInRoute = () => {
-    if (isInRoute) {
-      setPendingAction('remove');
-      setShowConfirmation(true);
-    } else {
-      addDestination(destination);
-      // Mostra feedback visual
-      setTimeout(() => {
-        onClose();
-      }, 1000);
-    }
-  };
-
-  const handleImageChange = (newIndex) => {
-    setCurrentImageIndex(newIndex);
-  };
-
-  const handleTabChange = (tabId) => {
-    setActiveTab(tabId);
-  };
-
   const handleToggleRoute = () => {
     if (isInRoute) {
       setPendingAction('remove');
       setShowConfirmation(true);
     } else {
-      addDestination(destination);
+      if (addDestination && typeof addDestination === 'function') {
+        addDestination(destination);
+      }
       // Mostra feedback visual
       setTimeout(() => {
-        onClose();
+        if (onClose && typeof onClose === 'function') {
+          onClose();
+        }
       }, 1000);
+    }
+  };
+
+  const handleImageChange = (newIndex) => {
+    // Verificar se newIndex é um número válido
+    if (typeof newIndex === 'number' && newIndex >= 0) {
+      setCurrentImageIndex(newIndex);
+    }
+  };
+
+  const handleTabChange = (tabId) => {
+    // Verificar se tabId é uma string válida
+    if (typeof tabId === 'string') {
+      setActiveTab(tabId);
     }
   };
 

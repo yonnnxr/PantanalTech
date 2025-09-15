@@ -11,8 +11,11 @@ export default function AdvancedFilters({ destinations, onFilterChange }) {
   });
   const { language, t } = useLanguage();
 
+  // Verificar se destinations é um array válido
+  const validDestinations = Array.isArray(destinations) ? destinations : [];
+
   const applyFilters = (newFilters) => {
-    let filtered = [...destinations];
+    let filtered = [...validDestinations];
 
     // Filtro por categoria
     if (newFilters.category !== 'all') {
@@ -28,34 +31,59 @@ export default function AdvancedFilters({ destinations, onFilterChange }) {
     // Filtro por duração
     if (newFilters.duration !== 'all') {
       filtered = filtered.filter(dest => {
-        const duration = language === 'pt' ? dest.duration : dest.durationEn;
-        const hours = parseInt(duration.split('-')[0]);
-        
-        switch (newFilters.duration) {
-          case 'short': return hours <= 2;
-          case 'medium': return hours > 2 && hours <= 4;
-          case 'long': return hours > 4;
-          default: return true;
+        try {
+          const duration = language === 'pt' ? (dest.duration || '') : (dest.durationEn || '');
+          // Verificar se duration existe e não está vazio
+          if (!duration) return false;
+          
+          // Extrair o número de horas da string (ex: "2-3 horas" -> 2)
+          const hoursMatch = duration.match(/(\d+)/);
+          if (!hoursMatch) return false;
+          
+          const hours = parseInt(hoursMatch[1], 10);
+          if (isNaN(hours)) return false;
+          
+          switch (newFilters.duration) {
+            case 'short': return hours <= 2;
+            case 'medium': return hours > 2 && hours <= 4;
+            case 'long': return hours > 4;
+            default: return true;
+          }
+        } catch (error) {
+          console.error('Erro ao filtrar por duração:', error);
+          return true;
         }
       });
     }
 
     // Filtro por texto de busca
     if (newFilters.searchText) {
-      const searchLower = newFilters.searchText.toLowerCase();
-      filtered = filtered.filter(dest => {
-        const name = (language === 'pt' ? dest.name : dest.nameEn).toLowerCase();
-        const description = (language === 'pt' ? dest.description : dest.descriptionEn).toLowerCase();
-        const highlights = (language === 'pt' ? dest.highlights : dest.highlightsEn)
-          .join(' ').toLowerCase();
-        
-        return name.includes(searchLower) || 
-               description.includes(searchLower) || 
-               highlights.includes(searchLower);
-      });
+      const searchLower = newFilters.searchText.toLowerCase().trim();
+      if (searchLower) {
+        filtered = filtered.filter(dest => {
+          try {
+            const name = (language === 'pt' ? (dest.name || '') : (dest.nameEn || '')).toLowerCase();
+            const description = (language === 'pt' ? (dest.description || '') : (dest.descriptionEn || '')).toLowerCase();
+            
+            // Verificar se highlights é um array válido
+            const highlightsArray = Array.isArray(dest.highlights) ? dest.highlights : [];
+            const highlights = highlightsArray.join(' ').toLowerCase();
+            
+            return name.includes(searchLower) || 
+                   description.includes(searchLower) || 
+                   highlights.includes(searchLower);
+          } catch (error) {
+            console.error('Erro ao filtrar por texto:', error);
+            return false;
+          }
+        });
+      }
     }
 
-    onFilterChange(filtered);
+    // Chamar onFilterChange apenas se for uma função válida
+    if (onFilterChange && typeof onFilterChange === 'function') {
+      onFilterChange(filtered);
+    }
   };
 
   const handleFilterChange = (key, value) => {
@@ -108,6 +136,7 @@ export default function AdvancedFilters({ destinations, onFilterChange }) {
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="text-blue-600 hover:text-blue-700 transition-colors"
+            aria-label={isOpen ? t('Fechar filtros', 'Close filters') : t('Abrir filtros', 'Open filters')}
           >
             <i className={`fa-solid fa-chevron-${isOpen ? 'up' : 'down'}`}></i>
           </button>
