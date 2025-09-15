@@ -1,4 +1,4 @@
-name = "rota-serra-charme-paxixi"
+name = "seachapantanal"
 compatibility_date = "2025-08-04"
 main = "src/worker.js"
 
